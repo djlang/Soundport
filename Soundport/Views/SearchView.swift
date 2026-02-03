@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SearchView: View {
     @Environment(\.dismiss) var dismiss // 用于关闭页面
-    @StateObject private var viewModel = HomeViewModel() // 或者共用单例
+    @StateObject private var viewModel = HomeViewModel.shared
     @ObservedObject private var playerManager = AudioPlayerManager.shared
     @ObservedObject private var favManager = FavoritesManager.shared
 

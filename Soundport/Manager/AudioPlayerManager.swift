@@ -186,8 +186,11 @@ class AudioPlayerManager: ObservableObject {
             self?.previous()
             return .success
         }
+        
+       
     }
     
+
  
     private func updateNowPlayingInfo(station: Station) {
         var info = [String: Any]()
@@ -201,4 +204,24 @@ class AudioPlayerManager: ObservableObject {
         
         MPNowPlayingInfoCenter.default().nowPlayingInfo = info
     }
+}
+
+extension AudioPlayerManager {
+   
+    func updateNowPlaying(station: Station) {
+        var nowPlayingInfo = [String: Any]()
+        nowPlayingInfo[MPMediaItemPropertyTitle] = station.name
+        nowPlayingInfo[MPMediaItemPropertyArtist] = station.frequency
+        
+        // 设置封面
+        if let url = URL(string: station.logoUrl), let data = try? Data(contentsOf: url) {
+            if let image = UIImage(data: data) {
+                nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
+            }
+        }
+        
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+    }
+    
+ 
 }

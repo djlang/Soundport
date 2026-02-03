@@ -8,7 +8,7 @@
 import Foundation
 
 // 电台模型
-struct Station: Identifiable, Hashable {
+struct Station: Identifiable, Hashable,Codable {
     let id = UUID()
     let name: String
     let frequency: String
@@ -18,7 +18,7 @@ struct Station: Identifiable, Hashable {
 }
 
 // 地区模型，包含该地区下的电台列表
-struct Region: Identifiable, Hashable {
+struct Region: Identifiable, Hashable, Codable {
     let id: String // 用于 ScrollViewReader 的锚点 ID
     let name: String
     let stations: [Station]

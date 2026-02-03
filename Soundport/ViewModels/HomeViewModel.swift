@@ -5,13 +5,17 @@
 //  Created by dengjinlang on 2026/2/1.
 //
 
+
 import SwiftUI
 import Combine
-
 
 @MainActor
 class HomeViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
+    
+    // MARK: - 1. 单例定义
+    // 使用单例模式确保 CarPlay 和手机端共享同一份内存数据
+    static let shared = HomeViewModel()
     
     @Published var regions: [Region] = []
     @Published var selectedRegionId: String = ""
@@ -21,12 +25,14 @@ class HomeViewModel: ObservableObject {
     @Published var searchResults: [Station] = []
     @Published var isSearching: Bool = false
     
-    private var searchTimer: Timer? // 用于防抖，避免频繁请求
+    private var searchTimer: Timer? // 用于防抖
     
-    // 标记是否由用户主动点击左侧菜单，防止滚动时的反向联动干扰
+    // 标记是否由用户主动点击左侧菜单
     var isManualClick: Bool = false
     
-    init() {
+    // MARK: - 2. 构造函数
+    // 设为 private 确保外部只能通过 .shared 访问
+    private init() {
         // 监听 FavoritesManager 的变化，一旦变化就通知 ViewModel 刷新
         FavoritesManager.shared.$favoriteIDs
             .receive(on: RunLoop.main)
@@ -34,6 +40,18 @@ class HomeViewModel: ObservableObject {
                 self?.objectWillChange.send()
             }
             .store(in: &cancellables)
+            
+        // 可以在初始化时自动加载一次数据
+        Task {
+            await loadAllData()
+        }
+    }
+    
+    // MARK: - 3. 数据处理逻辑
+    
+    // 提供给 CarPlay 使用的平铺电台列表
+    var allStations: [Station] {
+        regions.flatMap { $0.stations }
     }
     
     // 计算属性：动态获取收藏的电台分组
@@ -41,7 +59,7 @@ class HomeViewModel: ObservableObject {
         let favIDs = FavoritesManager.shared.favoriteIDs
         if favIDs.isEmpty { return nil }
         
-        let allStations = regions.flatMap { $0.stations }
+        // 从当前已加载的所有分组中寻找匹配收藏 ID 的电台
         let favStations = allStations.filter { favIDs.contains($0.id) }
         
         if favStations.isEmpty { return nil }
@@ -49,33 +67,47 @@ class HomeViewModel: ObservableObject {
     }
     
     func loadAllData() async {
-        // 避免重复加载
-        guard regions.isEmpty else { return }
-        
-        isLoading = true
-        print("🚀 [ViewModel] 开始全量数据加载与智能分组...")
+        // 1. 尝试先从缓存加载（秒开界面）
+        if let cachedRegions = CacheManager.loadFromCache() {
+            self.regions = cachedRegions
+            if let first = self.regions.first {
+                self.selectedRegionId = first.id
+            }
+            // 如果缓存有数据，可以提前关闭 loading，提升用户感知的“快”
+            self.isLoading = false
+        } else {
+            self.isLoading = true
+        }
+     
         
         do {
-            // 1. 获取内地全量数据（包含 Service 内部的分组和中英映射）
+            // 1. 获取内地全量数据
             var allRegions = try await RadioService.shared.fetchChinaDataWithDebug()
             
-            // 2. 并行获取港台数据（保持这两大分类的独立性）
+            // 2. 并行获取港台数据
             async let hk = RadioService.shared.fetchRegionData(code: "HK", regionName: "香港")
             async let tw = RadioService.shared.fetchRegionData(code: "TW", regionName: "台湾")
             
             let additionalRegions = try await [hk, tw]
             allRegions.append(contentsOf: additionalRegions)
             
-            // 3. 排序策略：国家台/其他排在前面，或者按字母排
-            // 这里我们把“国家台”和“广东”等热门置顶，其他的按字母排
-            self.regions = sortRegions(allRegions)
+            // 3. 排序策略
+            let sortedResult = sortRegions(allRegions)
             
-            AudioPlayerManager.shared.allRegions = sortRegions(allRegions)
-            
-            // 4. 设置默认选中项
-            if let firstRegion = self.regions.first {
-                self.selectedRegionId = firstRegion.id
+            await MainActor.run {
+                self.regions = sortedResult
+                // 同步给播放管理器的全量列表（如果需要）
+                AudioPlayerManager.shared.allRegions = sortedResult
+                // 4. 设置默认选中项
+                if let firstRegion = self.regions.first {
+                    self.selectedRegionId = firstRegion.id
+                }
+                self.isLoading = false
+                // 写入本地，供下次启动使用
+                CacheManager.saveToCache(sortedResult)
             }
+            
+            
             
             print("✅ [ViewModel] 数据装载完成，共 \(self.regions.count) 个分组")
             
@@ -86,56 +118,49 @@ class HomeViewModel: ObservableObject {
         isLoading = false
     }
     
-    // 执行搜索
+    // MARK: - 4. 搜索逻辑
+    
     func performSearch() async {
         searchTimer?.invalidate()
         searchTimer = Timer.scheduledTimer(withTimeInterval: 0.6, repeats: false) { _ in
-            // 这里的闭包在非隔离上下文中运行
             Task {
                 let query = await self.searchText.trimmingCharacters(in: .whitespaces)
                 guard !query.isEmpty else {
-                    // 错误：不能直接 self.searchResults = []
                     await MainActor.run {
                         self.searchResults = []
                     }
                     return
                 }
                 
-                // 异步任务开始
                 await MainActor.run { self.isSearching = true }
                 
                 do {
                     let results = try await RadioService.shared.searchStations(name: query)
                     
-                    // 成功：切回主线程更新 UI
                     await MainActor.run {
                         self.searchResults = results
+                        
+                        // 怀集补丁逻辑
+                        if query.contains("怀集") {
+                            let huaiji = Station(name: "怀集之声", frequency: "FM102.7", logoUrl: "", streamUrl: "http://lhttp.qingting.fm/live/4864/64k.mp3", tags: "广东")
+                            if !self.searchResults.contains(where: { $0.name == "怀集之声" }) {
+                                self.searchResults.insert(huaiji, at: 0)
+                            }
+                        }
+                        
                         self.isSearching = false
                     }
                 } catch {
-                    print("⚠️ 搜索捕获到错误: \(error.localizedDescription)")
-                    
-                    // 失败：切回主线程重置状态
+                    print("⚠️ 搜索错误: \(error.localizedDescription)")
                     await MainActor.run {
                         self.searchResults = []
                         self.isSearching = false
                     }
                 }
-                if query.contains("怀集") {
-                    let huaiji = Station(name: "怀集之声", frequency: "FM", logoUrl: "", streamUrl: "你的地址", tags: "广东")
-                    await MainActor.run {
-                        self.searchResults.insert(huaiji, at: 0)
-                    }
-                }
             }
-            
-           
         }
-        
-        
     }
     
-    // 辅助排序方法：让列表更符合用户习惯
     private func sortRegions(_ list: [Region]) -> [Region] {
         let topPriority = ["国家台", "广东", "香港", "台湾"]
         
@@ -151,7 +176,8 @@ class HomeViewModel: ObservableObject {
         }
     }
 }
-// 解析专用的原始模型
+
+// MARK: - 模型定义
 struct RawState: Codable { let name: String }
 struct RawStation: Codable {
     let name: String

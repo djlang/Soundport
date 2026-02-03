@@ -20,6 +20,13 @@
 		D2CE72B72F31A88C00F69A99 /* StationRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CE72AB2F31A88C00F69A99 /* StationRow.swift */; };
 		D2CE72B82F31A88C00F69A99 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D2CE729F2F31A88C00F69A99 /* Assets.xcassets */; };
 		D2CE72C02F31C22C00F69A99 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CE72BF2F31C22800F69A99 /* SearchView.swift */; };
+		D2CE72C82F31D46E00F69A99 /* SleepTimerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CE72C72F31D46C00F69A99 /* SleepTimerManager.swift */; };
+		D2CE72CA2F31D54200F69A99 /* SleepTimerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CE72C92F31D53D00F69A99 /* SleepTimerSheet.swift */; };
+		D2CE72CC2F31D95F00F69A99 /* CarPlaySceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CE72CB2F31D95B00F69A99 /* CarPlaySceneDelegate.swift */; };
+		D2CE72CE2F31E33100F69A99 /* LiveVisualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CE72CD2F31E32F00F69A99 /* LiveVisualizer.swift */; };
+		D2CE72D02F31E70F00F69A99 /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CE72CF2F31E70D00F69A99 /* CacheManager.swift */; };
+		D2CE72D22F31F16600F69A99 /* LiveProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CE72D12F31F15D00F69A99 /* LiveProgressView.swift */; };
+		D2CE72D42F31FA6A00F69A99 /* ShazamManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CE72D32F31FA6800F69A99 /* ShazamManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +64,13 @@
 		D2CE72AA2F31A88C00F69A99 /* Station.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Station.swift; sourceTree = "<group>"; };
 		D2CE72AB2F31A88C00F69A99 /* StationRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationRow.swift; sourceTree = "<group>"; };
 		D2CE72BF2F31C22800F69A99 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
+		D2CE72C72F31D46C00F69A99 /* SleepTimerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepTimerManager.swift; sourceTree = "<group>"; };
+		D2CE72C92F31D53D00F69A99 /* SleepTimerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepTimerSheet.swift; sourceTree = "<group>"; };
+		D2CE72CB2F31D95B00F69A99 /* CarPlaySceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlaySceneDelegate.swift; sourceTree = "<group>"; };
+		D2CE72CD2F31E32F00F69A99 /* LiveVisualizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveVisualizer.swift; sourceTree = "<group>"; };
+		D2CE72CF2F31E70D00F69A99 /* CacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
+		D2CE72D12F31F15D00F69A99 /* LiveProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveProgressView.swift; sourceTree = "<group>"; };
+		D2CE72D32F31FA6800F69A99 /* ShazamManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShazamManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -120,6 +134,7 @@
 		D2CE72AC2F31A88C00F69A99 /* Soundport */ = {
 			isa = PBXGroup;
 			children = (
+				D2CE72CB2F31D95B00F69A99 /* CarPlaySceneDelegate.swift */,
 				D2CE72BE2F31A92F00F69A99 /* Views */,
 				D2CE72BD2F31A8DC00F69A99 /* Services */,
 				D2CE72BC2F31A8C300F69A99 /* Manager */,
@@ -150,6 +165,9 @@
 		D2CE72BC2F31A8C300F69A99 /* Manager */ = {
 			isa = PBXGroup;
 			children = (
+				D2CE72D32F31FA6800F69A99 /* ShazamManager.swift */,
+				D2CE72CF2F31E70D00F69A99 /* CacheManager.swift */,
+				D2CE72C72F31D46C00F69A99 /* SleepTimerManager.swift */,
 				D2CE72A42F31A88C00F69A99 /* ImageCacheManager.swift */,
 				D2CE72A22F31A88C00F69A99 /* FavoritesManager.swift */,
 				D2CE72A02F31A88C00F69A99 /* AudioPlayerManager.swift */,
@@ -168,6 +186,9 @@
 		D2CE72BE2F31A92F00F69A99 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				D2CE72D12F31F15D00F69A99 /* LiveProgressView.swift */,
+				D2CE72CD2F31E32F00F69A99 /* LiveVisualizer.swift */,
+				D2CE72C92F31D53D00F69A99 /* SleepTimerSheet.swift */,
 				D2CE72BF2F31C22800F69A99 /* SearchView.swift */,
 				D2CE72A92F31A88C00F69A99 /* SoundportApp.swift */,
 				D2CE72A12F31A88C00F69A99 /* ContentView.swift */,
@@ -323,13 +344,20 @@
 				D2CE72AD2F31A88C00F69A99 /* AudioPlayerManager.swift in Sources */,
 				D2CE72AE2F31A88C00F69A99 /* ContentView.swift in Sources */,
 				D2CE72AF2F31A88C00F69A99 /* FavoritesManager.swift in Sources */,
+				D2CE72D02F31E70F00F69A99 /* CacheManager.swift in Sources */,
 				D2CE72B02F31A88C00F69A99 /* HomeViewModel.swift in Sources */,
+				D2CE72CC2F31D95F00F69A99 /* CarPlaySceneDelegate.swift in Sources */,
 				D2CE72C02F31C22C00F69A99 /* SearchView.swift in Sources */,
 				D2CE72B12F31A88C00F69A99 /* ImageCacheManager.swift in Sources */,
+				D2CE72C82F31D46E00F69A99 /* SleepTimerManager.swift in Sources */,
+				D2CE72D22F31F16600F69A99 /* LiveProgressView.swift in Sources */,
+				D2CE72D42F31FA6A00F69A99 /* ShazamManager.swift in Sources */,
 				D2CE72B22F31A88C00F69A99 /* MainHomeView.swift in Sources */,
 				D2CE72B32F31A88C00F69A99 /* RadioService.swift in Sources */,
+				D2CE72CA2F31D54200F69A99 /* SleepTimerSheet.swift in Sources */,
 				D2CE72B42F31A88C00F69A99 /* RegionTabItem.swift in Sources */,
 				D2CE72B52F31A88C00F69A99 /* SoundportApp.swift in Sources */,
+				D2CE72CE2F31E33100F69A99 /* LiveVisualizer.swift in Sources */,
 				D2CE72B62F31A88C00F69A99 /* Station.swift in Sources */,
 				D2CE72B72F31A88C00F69A99 /* StationRow.swift in Sources */,
 			);
@@ -497,7 +525,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Soundport/Info.plist;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "我们需要访问麦克风以识别电台中正在播放的歌曲信息。";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -531,7 +559,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Soundport/Info.plist;
-				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "我们需要访问麦克风以识别电台中正在播放的歌曲信息。";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";

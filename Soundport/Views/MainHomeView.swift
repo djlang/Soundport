@@ -2,22 +2,35 @@ import SwiftUI
 
 struct MainHomeView: View {
     private let miniPlayerHeight: CGFloat = 100
-    @StateObject private var viewModel = HomeViewModel()
+//    @StateObject private var viewModel = HomeViewModel()
+    @StateObject private var viewModel = HomeViewModel.shared
     // 关键：将 currentStation 逻辑交给 playerManager 统一管理，确保 UI 状态同步
     @ObservedObject private var playerManager = AudioPlayerManager.shared
     @State private var showSearchSheet = false
+    
+    @State private var showSleepTimerSheet = false
+    @ObservedObject var sleepManager = SleepTimerManager.shared
+    
+    @StateObject private var shazamManager = ShazamManager()
+    
     var body: some View {
         // 使用 NavigationView 提供顶部标题栏空间
         NavigationView {
             ZStack(alignment: .bottom) {
+                
+//                // 背景层：放一个渐变色，透过侧边栏会非常漂亮
+//                LinearGradient(
+//                    colors: [Color.blue.opacity(0.1), Color.purple.opacity(0.1)],
+//                    startPoint: .topLeading,
+//                    endPoint: .bottomTrailing
+//                )
+//                .ignoresSafeArea()
                 HStack(spacing: 0) {
-                    // 1. 左侧地区导航栏
+                    //  左侧地区导航栏
                     leftSidebar
-                    
                     //  右侧电台列表
                     rightStationList
                 }
-                
                  //底部播放
                 if playerManager.currentStation != nil {
                     miniPlayer // 不再需要传参 (for: station)
@@ -38,8 +51,10 @@ struct MainHomeView: View {
                         .foregroundColor(.green.opacity(0.8))
                 }
             }
+            .sheet(isPresented: $showSleepTimerSheet) {
+                SleepTimerSheet()
+            }
             
-           
         }
         .navigationViewStyle(.stack) // 适配不同尺寸屏幕
         .onAppear {
@@ -47,6 +62,7 @@ struct MainHomeView: View {
                 await viewModel.loadAllData()
             }
         }
+     
     }
     
     // --- 子组件：左侧导航 ---
@@ -92,8 +108,16 @@ struct MainHomeView: View {
                 }
             }
         }
-        .frame(width: 85)
-        .background(Color(UIColor.systemGray6))
+        .frame(width: 100)
+        .background(
+            Rectangle()
+            .fill(.ultraThinMaterial)
+        )
+        .overlay(
+            Divider().offset(x: 1), // 在右侧加一条细线
+            alignment: .trailing
+        )
+        
     }
     
     // --- 子组件：右侧列表 ---
@@ -189,73 +213,131 @@ struct MainHomeView: View {
             if let station = playerManager.currentStation {
                 VStack(spacing: 0) {
                     Divider()
-                    HStack(spacing: 15) {
-                        // --- 1. Logo 部分 ---
-                        CachedImage(url: station.logoUrl) { image in
-                            image.resizable().scaledToFill()
-                        } placeholder: {
-                            ZStack {
-                                Color.blue.opacity(0.1)
-                                Image(systemName: "radio").foregroundColor(.blue.opacity(0.5))
-                            }
-                        }
-                        .frame(width: 50, height: 50)
-                        .cornerRadius(8)
-                        .clipped()
-                        // 给图片加个标识，切换时有淡入淡出
-                        .id("logo_\(station.id)")
-                       
-                        VStack(alignment: .leading, spacing: 4) {
-                            // --- 2. 文字部分 ---
-                            Text(station.name)
-                                .font(.system(size: 15, weight: .bold))
-                                .lineLimit(1)
-                                // 关键：当 ID 变化时，应用推入动画
-                                .transition(.asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity),
-                                                       removal: .move(edge: .leading).combined(with: .opacity)))
-                            
-                            HStack(spacing: 22) {
-                                let isFav = FavoritesManager.shared.favoriteIDs.contains(station.id)
-                                Button(action: {
-                                    withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) { // 加个跳动动画
-                                        FavoritesManager.shared.toggleFavorite(stationID: station.id)
-                                    }
-                                }) {
-                                    Image(systemName: isFav ? "heart.fill" : "heart")
-                                        .foregroundColor(isFav ? .red : .gray)
-                                        .scaleEffect(isFav ? 1.2 : 1.0) // 收藏后稍微放大，更有质感
-                                }
-                                
-                                Button(action: { playerManager.previous() }) {
-                                    Image(systemName: "backward.fill")
-                                }
-                                
-                                
+                    VStack {
+                        HStack(spacing: 15) {
+                            // --- 1. Logo 部分 ---
+                            CachedImage(url: station.logoUrl) { image in
+                                image.resizable().scaledToFill()
+                            } placeholder: {
                                 ZStack {
-                                    if playerManager.isBuffering {
-                                        ProgressView()
-                                            .controlSize(.small)
-                                    }else {
-                                        Button(action: { playerManager.toggle() }) {
-                                            Image(systemName: playerManager.isPlaying ? "pause.fill" : "play.fill")
+                                    Color.blue.opacity(0.1)
+                                    Image(systemName: "radio").foregroundColor(.blue.opacity(0.5))
+                                }
+                            }
+                            .frame(width: 40, height: 40)
+                            .cornerRadius(25)
+                            .clipped()
+                            // 给图片加个标识，切换时有淡入淡出
+                            .id("logo_\(station.id)")
+                            
+                            VStack {
+                                // --- 2. 文字部分 ---
+                                Text(station.name)
+                                    .font(.system(size: 15, weight: .bold))
+                                    .lineLimit(1)
+                                    // 关键：当 ID 变化时，应用推入动画
+                                    .transition(.asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity),
+                                                           removal: .move(edge: .leading).combined(with: .opacity)))
+                                Text(station.frequency)
+                                    .font(.system(size: 13))
+                                    .foregroundColor(.secondary)
+                            }
+                            
+                            Spacer()
+                            
+                            // “直播” 标志
+                            HStack(spacing: 4) {
+                                Circle()
+                                    .fill(Color.red)
+                                    .frame(width: 6, height: 6)
+                                Text("直播")
+                                    .font(.system(size: 12, weight: .bold))
+                                    .foregroundColor(.red)
+                            }
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(Color.red.opacity(0.1))
+                            .cornerRadius(4)
+                           
+                         }
+                        
+                        LiveProgressView()
+                            .padding(.horizontal)
+                        
+                        HStack(spacing: 18) {
+                            // 🎵 音乐识别按钮
+                            Button(action: {
+                                shazamManager.isRecognizing ? shazamManager.stopRecognition() : shazamManager.startRecognition()
+                            }) {
+                                Image(systemName: shazamManager.isRecognizing ? "waveform.and.mic" : "shazam.logo")
+                                    .font(.system(size: 20))
+                                    .foregroundColor(shazamManager.isRecognizing ? .blue : .secondary)
+                                    .symbolEffect(.bounce, options: .repeating, value: shazamManager.isRecognizing)
+                            }
+                            
+                            let isFav = FavoritesManager.shared.favoriteIDs.contains(station.id)
+                            Button(action: {
+                                withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) { // 加个跳动动画
+                                    FavoritesManager.shared.toggleFavorite(stationID: station.id)
+                                }
+                            }) {
+                                Image(systemName: isFav ? "heart.fill" : "heart")
+                                    .foregroundColor(isFav ? .red : .gray)
+                                    .scaleEffect(isFav ? 1.2 : 1.0) // 收藏后稍微放大，更有质感
+                            }
+                            
+                            Spacer()
+                            Button(action: { playerManager.previous() }) {
+                                Image(systemName: "backward.fill")
+                            }
+                            
+                            
+                            ZStack {
+                                if playerManager.isBuffering {
+                                    ProgressView()
+                                        .controlSize(.small)
+                                }else {
+                                    Button(action: { playerManager.toggle() }) {
+                                        Image(systemName: playerManager.isPlaying ? "pause.fill" : "play.fill")
+                                    }
+                                }
+                            }
+                            .frame(width: 30)
+                            
+                            Button(action: { playerManager.next() }) {
+                                Image(systemName: "forward.fill")
+                            }
+                            
+                            
+                            Spacer()
+                            
+                            Button(action: { /* 列表 */ }) {
+                                Image(systemName: "list.bullet")
+                            }
+                            
+                            if playerManager.currentStation != nil {
+                                Button(action: {
+                                    // 弹出睡眠选择菜单
+                                    showSleepTimerSheet = true
+                                }) {
+                                    VStack(spacing: 4) {
+                                        Image(systemName: "moon.stars.fill")
+                                        if sleepManager.isActive {
+                                            Text(sleepManager.formattedRemainingTime)
+                                                .font(.system(size: 10, design: .monospaced))
                                         }
                                     }
-                                }
-                                .frame(width: 30)
-                                
-                                Button(action: { playerManager.next() }) {
-                                    Image(systemName: "forward.fill")
-                                }
-                                
-                                Button(action: { /* 列表 */ }) {
-                                    Image(systemName: "list.bullet")
+                                    .foregroundColor(sleepManager.isActive ? .purple : .gray)
+                                    .padding(8)
+                                    .background(Color.purple.opacity(sleepManager.isActive ? 0.1 : 0))
+                                    .cornerRadius(8)
                                 }
                             }
-                            .font(.system(size: 18))
-                            .foregroundColor(.primary)
-                            .padding(.top, 2)
                         }
-                        Spacer()
+                        .font(.system(size: 18))
+                        .foregroundColor(.primary)
+                        .padding(.top, 2)
+                     
                     }
                     .padding(.horizontal)
                     .padding(.top, 8)

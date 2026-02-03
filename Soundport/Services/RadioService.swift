@@ -12,7 +12,7 @@ class RadioService {
     static let shared = RadioService()
     
     // 使用分布式负载均衡域名，提高国内访问稳定性
-    private let baseURL = "http://all.api.radio-browser.info/json"
+    private let baseURL = "https://all.api.radio-browser.info/json"
     
     private let provinceMapping = [
         "Guangdong": "广东", "Beijing": "北京", "Shanghai": "上海",
@@ -23,7 +23,7 @@ class RadioService {
     func fetchChinaDataWithDebug() async throws -> [Region] {
             print("🚩 [DEBUG] RadioService 方法已被激活！")
             
-            let urlString = "\(baseURL)/stations/bycountrycodeexact/CN?limit=1000&order=clickcount&reverse=true"
+            let urlString = "\(baseURL)/stations/bycountrycodeexact/CN?limit=500&order=clickcount&reverse=true"
             guard let url = URL(string: urlString) else {
                 print("❌ [DEBUG] URL 构造失败"); return []
             }

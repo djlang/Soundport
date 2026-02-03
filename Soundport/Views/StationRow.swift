@@ -12,6 +12,11 @@ struct StationRow: View {
     @ObservedObject private var favManager = FavoritesManager.shared
     
     let station: Station
+    // 判断当前电台是否正在播放
+    var isPlaying: Bool {
+        playerManager.currentStation?.id == station.id && playerManager.isPlaying
+    }
+    
     var body: some View {
         HStack(spacing: 12) {
             // 在 StationRow 或 miniPlayer
@@ -30,32 +35,12 @@ struct StationRow: View {
                 }
                 .frame(width: 50, height: 50)
                 .cornerRadius(8)
-                
+                //logo旋转
+//                .rotationEffect(.degrees(isPlaying ? 360 : 0))
+//                .animation(isPlaying ? .linear(duration: 10).repeatForever(autoreverses: false) : .default, value: isPlaying)
                 // 2. 覆盖的播放状态图标
-                if playerManager.currentStation?.id == station.id {
-                    ZStack {
-                        // 半透明遮罩
-                        Color.black.opacity(0.4)
-                            .cornerRadius(8)
-                        
-                        if playerManager.isBuffering {
-                            // 正在缓冲显示转圈
-                            ProgressView()
-                                .controlSize(.small)
-                                .tint(.white)
-                        } else if playerManager.isPlaying {
-                            // 正在播放显示波纹或暂停键
-                            Image(systemName: "waveform")
-                                .foregroundColor(.white)
-                                .font(.system(size: 14, weight: .bold))
-                        } else {
-                            // 已选中但暂停显示播放键
-                            Image(systemName: "play.fill")
-                                .foregroundColor(.white)
-                                .font(.system(size: 14))
-                        }
-                    }
-                    .frame(width: 50, height: 50)
+                if isPlaying {
+                    LiveVisualizer(color: .pink) // 在 Logo 上用白色比较显眼
                 }
             }
             
