@@ -14,15 +14,14 @@ class RadioService {
     // 使用分布式负载均衡域名，提高国内访问稳定性
     private let baseURL = "https://all.api.radio-browser.info/json"
     
-    private let provinceMapping = [
-        "Guangdong": "广东", "Beijing": "北京", "Shanghai": "上海",
-        "Zhejiang": "浙江", "Jiangsu": "江苏", "Fujian": "福建",
-        "Sichuan": "四川", "Hubei": "湖北", "Shandong": "山东"
-    ]
+//    private let provinceMapping = [
+//        "Guangdong": "广东", "Beijing": "北京", "Shanghai": "上海",
+//        "Zhejiang": "浙江", "Jiangsu": "江苏", "Fujian": "福建",
+//        "Sichuan": "四川", "Hubei": "湖北", "Shandong": "山东"
+//    ]
 
     func fetchChinaDataWithDebug() async throws -> [Region] {
-            print("🚩 [DEBUG] RadioService 方法已被激活！")
-            
+      
             let urlString = "\(baseURL)/stations/bycountrycodeexact/CN?limit=500&order=clickcount&reverse=true"
             guard let url = URL(string: urlString) else {
                 print("❌ [DEBUG] URL 构造失败"); return []
@@ -49,10 +48,12 @@ class RadioService {
                 let state = (item.state).lowercased()
                 
                 var category = "其他"
-                if name.contains("gd") || name.contains("guangdong") || name.contains("广东") || state.contains("guangdong") || state.contains("广东") {
+                if name.contains("gd") || name.contains("guangdong") || name.contains("广东") || state.contains("guangdong") || state.contains("广东") || state.contains("Kwangtung"){
                     category = "广东"
                 } else if name.contains("cnr") || name.contains("中央") || name.contains("北京") {
                     category = "国家台"
+                }else if name.contains("上海") || name.contains("Shanghai"){
+                    category = "上海"
                 } else if !state.isEmpty {
                     category = item.state // 使用原始省份名
                 }
@@ -63,7 +64,8 @@ class RadioService {
                     frequency: item.tags.split(separator: ",").first.map(String.init) ?? "网络广播",
                     logoUrl: item.favicon,
                     streamUrl: item.url_resolved,
-                    tags: item.tags
+                    tags: item.tags,
+                    state: item.state
                 )
                 groupDict[category, default: []].append(station)
             }
@@ -74,7 +76,7 @@ class RadioService {
     
     /// 专门获取香港/台湾数据的简化方法
     func fetchRegionData(code: String, regionName: String) async throws -> Region {
-        let urlString = "\(baseURL)/stations/bycountrycodeexact/\(code)?limit=50"
+        let urlString = "\(baseURL)/stations/bycountrycodeexact/\(code)?limit=100"
         guard let url = URL(string: urlString) else { throw URLError(.badURL) }
         
         let (data, _) = try await URLSession.shared.data(from: url)
@@ -84,11 +86,12 @@ class RadioService {
             let favicon: String
             let tags: String
             let changeuuid: String
+            let state: String
         }
         
         let raw = try JSONDecoder().decode([RawStation].self, from: data)
         let stations = raw.map {
-            Station(changeuuid: $0.changeuuid, name: $0.name, frequency: regionName, logoUrl: $0.favicon, streamUrl: $0.url_resolved, tags: $0.tags)
+            Station(changeuuid: $0.changeuuid, name: $0.name, frequency: regionName, logoUrl: $0.favicon, streamUrl: $0.url_resolved, tags: $0.tags, state: $0.state)
         }
         
         return Region(id: code, name: regionName, stations: stations)
@@ -128,7 +131,8 @@ class RadioService {
                 frequency: raw.tags.components(separatedBy: ",").first ?? "Internet",
                 logoUrl: raw.favicon,
                 streamUrl: raw.url_resolved,
-                tags: raw.tags
+                tags: raw.tags,
+                state: raw.state
             )
         }
     }

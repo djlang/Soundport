@@ -5,21 +5,6 @@
 //  Created by dengjinlang on 2026/2/1.
 //
 
-
-import SwiftUI
-import Combine
-
-//
-//  HomeViewModel.swift
-//  Soundport
-//
-//  Created by dengjinlang on 2026/2/1.
-//
-
-
-import SwiftUI
-import Combine
-
 import Foundation
 import Combine
 import SwiftUI
@@ -106,6 +91,8 @@ class HomeViewModel: ObservableObject {
             }
             
             CacheManager.saveToCache(sortedResult)
+            print("=====>数据\(sortedResult)")
+            
             print("✅ [ViewModel] 数据同步成功")
             
         } catch {
@@ -150,7 +137,8 @@ class HomeViewModel: ObservableObject {
                                 frequency: "",
                                 logoUrl: "http://lhttp.qingting.fm/live/4864/64k.mp3",
                                 streamUrl: "广东",
-                                tags: "FM102.7"
+                                tags: "FM102.7",
+                                state: "肇庆"
                             )
                             if !self.searchResults.contains(where: { $0.name == "怀集之声" }) {
                                 self.searchResults.insert(huaiji, at: 0)

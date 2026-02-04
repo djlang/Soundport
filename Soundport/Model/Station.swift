@@ -17,6 +17,8 @@ struct Station: Identifiable, Hashable,Codable {
     let logoUrl: String // 暂时用系统图标代替
     let streamUrl: String
     let tags: String
+    let state: String
+    
 }
 
 // 地区模型，包含该地区下的电台列表

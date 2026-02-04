@@ -61,7 +61,45 @@ class AudioPlayerManager: ObservableObject {
         self.isPlaying = true
         // 开始播放时先设定为正在缓冲
         self.isBuffering = true
-        updateNowPlayingInfo(station: station)
+        
+//        if let url = URL(string: station.logoUrl) {
+//            URLSession.shared.dataTask(with: url) {[weak self] data, _, _ in
+//                if let data = data, let image = UIImage(data: data) {
+//                    DispatchQueue.main.async {
+//                        self?.updateNowPlaying(station: station, img: image)
+//                        self?.updateNowPlayingInfo(station: station, img: image)
+//                    }
+//                }
+//                
+//            }
+//        }else {
+//            DispatchQueue.main.async {
+//                self.updateNowPlaying(station: station, img: UIImage(systemName: "radio.fill"))
+//                self.updateNowPlayingInfo(station: station, img: UIImage(systemName: "radio.fill"))
+//            }
+//        }
+        
+        if let url = safeURL(from: station.logoUrl) {
+            URLSession.shared.dataTask(with: url) { [weak self] data, _, error in
+                guard let data = data,
+                      let image = UIImage(data: data) else {
+
+                    return
+                }
+
+                DispatchQueue.main.async {
+                    self?.updateNowPlaying(station: station, img: image)
+                    self?.updateNowPlayingInfo(station: station, img: image)
+                }
+            }.resume()
+        } else {
+            DispatchQueue.main.async {
+                self.updateNowPlaying(station: station, img: UIImage(systemName: "radio.fill"))
+                self.updateNowPlayingInfo(station: station, img: UIImage(systemName: "radio.fill"))
+            }
+        }
+
+    
     }
     
     func toggle() {
@@ -139,7 +177,7 @@ class AudioPlayerManager: ObservableObject {
 
     private func configureAudioSession() {
         do {
-            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [])
             try AVAudioSession.sharedInstance().setActive(true)
         } catch {
             print("❌ 音频会话配置失败: \(error)")
@@ -166,7 +204,10 @@ class AudioPlayerManager: ObservableObject {
             }
         }
     }
-    
+
+}
+
+extension AudioPlayerManager {
     
     // 在 play 方法中加入锁屏控制的下一首/上一首支持
     private func setupRemoteCommandCenter() {
@@ -190,38 +231,54 @@ class AudioPlayerManager: ObservableObject {
        
     }
     
-
- 
-    private func updateNowPlayingInfo(station: Station) {
+    
+    private func updateNowPlayingInfo(station: Station, img: UIImage?) {
         var info = [String: Any]()
         info[MPMediaItemPropertyTitle] = station.name
         info[MPMediaItemPropertyArtist] = station.frequency
         info[MPNowPlayingInfoPropertyIsLiveStream] = true
         
         info[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: CGSize(width: 512, height: 512)) { _ in
-            return UIImage(systemName: "radio.fill") ?? UIImage()
+            return img ?? UIImage()
         }
         
         MPNowPlayingInfoCenter.default().nowPlayingInfo = info
+        print("=====>正在同步锁屏：\(info)")
     }
-}
-
-extension AudioPlayerManager {
-   
-    func updateNowPlaying(station: Station) {
+    
+    func updateNowPlaying(station: Station, img: UIImage?) {
         var nowPlayingInfo = [String: Any]()
         nowPlayingInfo[MPMediaItemPropertyTitle] = station.name
         nowPlayingInfo[MPMediaItemPropertyArtist] = station.frequency
         
         // 设置封面
-        if let url = URL(string: station.logoUrl), let data = try? Data(contentsOf: url) {
-            if let image = UIImage(data: data) {
-                nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
-            }
+        if let image = img {
+            nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { _ in image }
         }
         
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+        
+        print("=====>正在同步锁屏：\(nowPlayingInfo)")
     }
     
  
+}
+
+extension AudioPlayerManager {
+    
+    func safeURL(from string: String) -> URL? {
+        guard !string.isEmpty else { return nil }
+
+        if let url = URL(string: string), url.scheme != nil {
+            return url
+        }
+
+        // 处理中文 / 空格
+        if let encoded = string.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+            return URL(string: encoded)
+        }
+
+        return nil
+    }
+
 }

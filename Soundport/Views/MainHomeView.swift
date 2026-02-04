@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct MainHomeView: View {
-    private let miniPlayerHeight: CGFloat = 100
+    private let miniPlayerHeight: CGFloat = 160
 //    @StateObject private var viewModel = HomeViewModel()
     @StateObject private var viewModel = HomeViewModel.shared
     // 关键：将 currentStation 逻辑交给 playerManager 统一管理，确保 UI 状态同步
@@ -12,6 +12,7 @@ struct MainHomeView: View {
     @ObservedObject var sleepManager = SleepTimerManager.shared
     
     @StateObject private var shazamManager = ShazamManager()
+    @State private var angle: Double = 0
     
     var body: some View {
         // 使用 NavigationView 提供顶部标题栏空间
@@ -106,7 +107,14 @@ struct MainHomeView: View {
                             }
                         }
                 }
+                
             }
+            
+            Color.clear
+                .frame(height: playerManager.currentStation != nil ? miniPlayerHeight : 0)
+                .listRowBackground(Color.clear)
+                .listRowSeparator(.hidden)
+            
         }
         .frame(width: 100)
         .background(
@@ -224,18 +232,23 @@ struct MainHomeView: View {
                                     Image(systemName: "radio").foregroundColor(.blue.opacity(0.5))
                                 }
                             }
-                            .frame(width: 40, height: 40)
-                            .cornerRadius(25)
+                            .frame(width: 38, height: 38)
+                            .cornerRadius(19)
                             .clipped()
                             // 给图片加个标识，切换时有淡入淡出
                             .id("logo_\(station.id)")
+                            .rotationEffect(.degrees(angle))
+                            .onAppear{
+                                startRotate()
+                            }
+                            
+                            Spacer()
                             
                             VStack {
                                 // --- 2. 文字部分 ---
                                 Text(station.name)
                                     .font(.system(size: 15, weight: .bold))
                                     .lineLimit(1)
-                                    // 关键：当 ID 变化时，应用推入动画
                                     .transition(.asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity),
                                                            removal: .move(edge: .leading).combined(with: .opacity)))
                                 Text(station.frequency)
@@ -351,9 +364,22 @@ struct MainHomeView: View {
                 // 核心动画：当电台 ID 改变时，整个内容块平滑过渡
                 .id(station.id)
             }
+            
         }
         .animation(.spring(response: 0.4, dampingFraction: 0.8), value: playerManager.currentStation?.id)
     }
+    
+    private func startRotate() {
+        angle = 0
+        withAnimation(.linear(duration: 8).repeatForever(autoreverses: false)) {
+            angle = 360
+        }
+    }
+
+    private func stopRotate() {
+        angle = 0
+    }
+
 
 }
 
