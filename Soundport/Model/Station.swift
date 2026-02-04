@@ -9,7 +9,9 @@ import Foundation
 
 // 电台模型
 struct Station: Identifiable, Hashable,Codable {
-    let id = UUID()
+    
+    let changeuuid: String
+    var id: String { changeuuid }
     let name: String
     let frequency: String
     let logoUrl: String // 暂时用系统图标代替

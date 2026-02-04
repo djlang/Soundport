@@ -275,11 +275,13 @@ struct MainHomeView: View {
                                     .symbolEffect(.bounce, options: .repeating, value: shazamManager.isRecognizing)
                             }
                             
-                            let isFav = FavoritesManager.shared.favoriteIDs.contains(station.id)
+                            let isFav = FavoritesManager.shared.isFavorite(station)
                             Button(action: {
                                 withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) { // 加个跳动动画
-                                    FavoritesManager.shared.toggleFavorite(stationID: station.id)
+                                    FavoritesManager.shared.toggleFavorite(station)
+                                    
                                 }
+                                
                             }) {
                                 Image(systemName: isFav ? "heart.fill" : "heart")
                                     .foregroundColor(isFav ? .red : .gray)
@@ -352,6 +354,7 @@ struct MainHomeView: View {
         }
         .animation(.spring(response: 0.4, dampingFraction: 0.8), value: playerManager.currentStation?.id)
     }
+
 }
 
 struct MainHomeView_Previews: PreviewProvider {

@@ -58,6 +58,7 @@ class RadioService {
                 }
                 
                 let station = Station(
+                    changeuuid: item.changeuuid,
                     name: item.name,
                     frequency: item.tags.split(separator: ",").first.map(String.init) ?? "网络广播",
                     logoUrl: item.favicon,
@@ -82,11 +83,12 @@ class RadioService {
             let url_resolved: String
             let favicon: String
             let tags: String
+            let changeuuid: String
         }
         
         let raw = try JSONDecoder().decode([RawStation].self, from: data)
         let stations = raw.map {
-            Station(name: $0.name, frequency: regionName, logoUrl: $0.favicon, streamUrl: $0.url_resolved, tags: $0.tags)
+            Station(changeuuid: $0.changeuuid, name: $0.name, frequency: regionName, logoUrl: $0.favicon, streamUrl: $0.url_resolved, tags: $0.tags)
         }
         
         return Region(id: code, name: regionName, stations: stations)
@@ -121,6 +123,7 @@ class RadioService {
         
         return rawStations.map { raw in
             Station(
+                changeuuid: raw.changeuuid,
                 name: raw.name,
                 frequency: raw.tags.components(separatedBy: ",").first ?? "Internet",
                 logoUrl: raw.favicon,
