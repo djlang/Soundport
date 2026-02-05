@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D201C4BC2F3445D900187367 /* PlayRadioIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D201C4BB2F3445D600187367 /* PlayRadioIntent.swift */; };
+		D201C4BE2F3445FC00187367 /* SoundportShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = D201C4BD2F3445F900187367 /* SoundportShortcuts.swift */; };
+		D201C4C02F34464800187367 /* PlayFavoritesIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D201C4BF2F34464600187367 /* PlayFavoritesIntent.swift */; };
 		D2CE72AD2F31A88C00F69A99 /* AudioPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CE72A02F31A88C00F69A99 /* AudioPlayerManager.swift */; };
 		D2CE72AE2F31A88C00F69A99 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CE72A12F31A88C00F69A99 /* ContentView.swift */; };
 		D2CE72AF2F31A88C00F69A99 /* FavoritesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CE72A22F31A88C00F69A99 /* FavoritesManager.swift */; };
@@ -47,6 +50,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D201C4BB2F3445D600187367 /* PlayRadioIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayRadioIntent.swift; sourceTree = "<group>"; };
+		D201C4BD2F3445F900187367 /* SoundportShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundportShortcuts.swift; sourceTree = "<group>"; };
+		D201C4BF2F34464600187367 /* PlayFavoritesIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayFavoritesIntent.swift; sourceTree = "<group>"; };
 		D22727DD2F2E4594002C3C24 /* Soundport.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Soundport.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D22727EA2F2E4597002C3C24 /* SoundportTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SoundportTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D22727F42F2E4597002C3C24 /* SoundportUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SoundportUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -111,6 +117,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D201C4C12F34468E00187367 /* Siri */ = {
+			isa = PBXGroup;
+			children = (
+				D201C4BF2F34464600187367 /* PlayFavoritesIntent.swift */,
+				D201C4BD2F3445F900187367 /* SoundportShortcuts.swift */,
+				D201C4BB2F3445D600187367 /* PlayRadioIntent.swift */,
+			);
+			path = Siri;
+			sourceTree = "<group>";
+		};
 		D22727D42F2E4594002C3C24 = {
 			isa = PBXGroup;
 			children = (
@@ -134,6 +150,7 @@
 		D2CE72AC2F31A88C00F69A99 /* Soundport */ = {
 			isa = PBXGroup;
 			children = (
+				D201C4C12F34468E00187367 /* Siri */,
 				D2CE72BE2F31A92F00F69A99 /* Views */,
 				D2CE72BD2F31A8DC00F69A99 /* Services */,
 				D2CE72BC2F31A8C300F69A99 /* Manager */,
@@ -348,13 +365,16 @@
 				D2CE72B02F31A88C00F69A99 /* HomeViewModel.swift in Sources */,
 				D2CE72CC2F31D95F00F69A99 /* CarPlaySceneDelegate.swift in Sources */,
 				D2CE72C02F31C22C00F69A99 /* SearchView.swift in Sources */,
+				D201C4BC2F3445D900187367 /* PlayRadioIntent.swift in Sources */,
 				D2CE72B12F31A88C00F69A99 /* ImageCacheManager.swift in Sources */,
 				D2CE72C82F31D46E00F69A99 /* SleepTimerManager.swift in Sources */,
 				D2CE72D22F31F16600F69A99 /* LiveProgressView.swift in Sources */,
+				D201C4C02F34464800187367 /* PlayFavoritesIntent.swift in Sources */,
 				D2CE72D42F31FA6A00F69A99 /* ShazamManager.swift in Sources */,
 				D2CE72B22F31A88C00F69A99 /* MainHomeView.swift in Sources */,
 				D2CE72B32F31A88C00F69A99 /* RadioService.swift in Sources */,
 				D2CE72CA2F31D54200F69A99 /* SleepTimerSheet.swift in Sources */,
+				D201C4BE2F3445FC00187367 /* SoundportShortcuts.swift in Sources */,
 				D2CE72B42F31A88C00F69A99 /* RegionTabItem.swift in Sources */,
 				D2CE72B52F31A88C00F69A99 /* SoundportApp.swift in Sources */,
 				D2CE72CE2F31E33100F69A99 /* LiveVisualizer.swift in Sources */,
@@ -528,6 +548,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Soundport/Info.plist;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "我们需要访问麦克风以识别电台中正在播放的歌曲信息";
+				INFOPLIST_KEY_NSSiriUsageDescription = "允许 Siri 语音控制播放电台。";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -565,6 +586,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Soundport/Info.plist;
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "我们需要访问麦克风以识别电台中正在播放的歌曲信息";
+				INFOPLIST_KEY_NSSiriUsageDescription = "允许 Siri 语音控制播放电台。";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
