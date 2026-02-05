@@ -10,6 +10,7 @@
 		D201C4BC2F3445D900187367 /* PlayRadioIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D201C4BB2F3445D600187367 /* PlayRadioIntent.swift */; };
 		D201C4BE2F3445FC00187367 /* SoundportShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = D201C4BD2F3445F900187367 /* SoundportShortcuts.swift */; };
 		D201C4C02F34464800187367 /* PlayFavoritesIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D201C4BF2F34464600187367 /* PlayFavoritesIntent.swift */; };
+		D201C4D12F3468FD00187367 /* SiriStation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D201C4D02F3468F400187367 /* SiriStation.swift */; };
 		D2CE72AD2F31A88C00F69A99 /* AudioPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CE72A02F31A88C00F69A99 /* AudioPlayerManager.swift */; };
 		D2CE72AE2F31A88C00F69A99 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CE72A12F31A88C00F69A99 /* ContentView.swift */; };
 		D2CE72AF2F31A88C00F69A99 /* FavoritesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CE72A22F31A88C00F69A99 /* FavoritesManager.swift */; };
@@ -53,6 +54,7 @@
 		D201C4BB2F3445D600187367 /* PlayRadioIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayRadioIntent.swift; sourceTree = "<group>"; };
 		D201C4BD2F3445F900187367 /* SoundportShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundportShortcuts.swift; sourceTree = "<group>"; };
 		D201C4BF2F34464600187367 /* PlayFavoritesIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayFavoritesIntent.swift; sourceTree = "<group>"; };
+		D201C4D02F3468F400187367 /* SiriStation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiriStation.swift; sourceTree = "<group>"; };
 		D22727DD2F2E4594002C3C24 /* Soundport.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Soundport.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D22727EA2F2E4597002C3C24 /* SoundportTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SoundportTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D22727F42F2E4597002C3C24 /* SoundportUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SoundportUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -120,6 +122,7 @@
 		D201C4C12F34468E00187367 /* Siri */ = {
 			isa = PBXGroup;
 			children = (
+				D201C4D02F3468F400187367 /* SiriStation.swift */,
 				D201C4BF2F34464600187367 /* PlayFavoritesIntent.swift */,
 				D201C4BD2F3445F900187367 /* SoundportShortcuts.swift */,
 				D201C4BB2F3445D600187367 /* PlayRadioIntent.swift */,
@@ -363,6 +366,7 @@
 				D2CE72AF2F31A88C00F69A99 /* FavoritesManager.swift in Sources */,
 				D2CE72D02F31E70F00F69A99 /* CacheManager.swift in Sources */,
 				D2CE72B02F31A88C00F69A99 /* HomeViewModel.swift in Sources */,
+				D201C4D12F3468FD00187367 /* SiriStation.swift in Sources */,
 				D2CE72CC2F31D95F00F69A99 /* CarPlaySceneDelegate.swift in Sources */,
 				D2CE72C02F31C22C00F69A99 /* SearchView.swift in Sources */,
 				D201C4BC2F3445D900187367 /* PlayRadioIntent.swift in Sources */,

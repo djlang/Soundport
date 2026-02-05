@@ -8,34 +8,22 @@
 import AppIntents
 import Foundation
 
-struct PlayRadioIntent: AudioPlaybackIntent {
+struct PlayRadioIntent: AudioStartingIntent {
     static var title: LocalizedStringResource = "播放电台"
-    static var description = IntentDescription("通过电台名称搜索并播放。")
 
-    // Siri 提示语：用户可以说“用 Soundport 播放怀集之声”
-    static var parameterSummary: some ParameterSummary {
-        Summary("播放 \(\.$stationName)")
-    }
+    // 参数使用 SiriStation
+    @Parameter(title: "电台")
+    var target: SiriStation
 
-    // 定义参数：电台名称
-    @Parameter(title: "电台名称", default: "音乐电台")
-    var stationName: String
-
-    // 核心执行逻辑
     @MainActor
     func perform() async throws -> some IntentResult {
-        // 1. 在 ViewModel 或全量数据中查找最匹配的电台
-        let allStations = HomeViewModel.shared.allStations
-        
-        // 模糊匹配：寻找名字里包含用户说的话的电台
-        if let targetStation = allStations.first(where: { $0.name.contains(stationName) }) {
-            // 2. 调用播放器开始播放
-            AudioPlayerManager.shared.play(station: targetStation)
-            
-            // 3. 返回成功结果，Siri 会回答你
-            return .result(dialog: "好的，正在为你播放\(targetStation.name)")
-        } else {
-            return .result(dialog: "抱歉，没找到名字叫\(stationName)的电台")
+        // 通过 target.id 找到原生的 Station 并播放
+        let allStaions = HomeViewModel.shared.allStations
+        if let station =  allStaions.first(where: { $0.changeuuid == target.id }) {
+            AudioPlayerManager.shared.play(station: station)
+            return .result(dialog: "好的，正在播放\(target.name)")
         }
+        return .result(dialog: "抱歉，找不到这个电台")
     }
 }
+
