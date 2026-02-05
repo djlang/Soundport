@@ -11,6 +11,12 @@
 		D201C4BE2F3445FC00187367 /* SoundportShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = D201C4BD2F3445F900187367 /* SoundportShortcuts.swift */; };
 		D201C4C02F34464800187367 /* PlayFavoritesIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D201C4BF2F34464600187367 /* PlayFavoritesIntent.swift */; };
 		D201C4D12F3468FD00187367 /* SiriStation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D201C4D02F3468F400187367 /* SiriStation.swift */; };
+		D201C4D92F348A2800187367 /* TVChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D201C4D82F348A2500187367 /* TVChannel.swift */; };
+		D201C4DD2F348A9900187367 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D201C4DC2F348A9700187367 /* MainTabView.swift */; };
+		D201C4DF2F348DE100187367 /* TVHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D201C4DE2F348DDF00187367 /* TVHomeView.swift */; };
+		D201C4E12F348F5400187367 /* TVViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D201C4E02F348F5100187367 /* TVViewModel.swift */; };
+		D201C4E52F34923800187367 /* M3UParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D201C4E42F34923500187367 /* M3UParser.swift */; };
+		D201C4E72F34995E00187367 /* TVVideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D201C4E62F34995C00187367 /* TVVideoPlayer.swift */; };
 		D2CE72AD2F31A88C00F69A99 /* AudioPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CE72A02F31A88C00F69A99 /* AudioPlayerManager.swift */; };
 		D2CE72AE2F31A88C00F69A99 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CE72A12F31A88C00F69A99 /* ContentView.swift */; };
 		D2CE72AF2F31A88C00F69A99 /* FavoritesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CE72A22F31A88C00F69A99 /* FavoritesManager.swift */; };
@@ -55,6 +61,12 @@
 		D201C4BD2F3445F900187367 /* SoundportShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundportShortcuts.swift; sourceTree = "<group>"; };
 		D201C4BF2F34464600187367 /* PlayFavoritesIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayFavoritesIntent.swift; sourceTree = "<group>"; };
 		D201C4D02F3468F400187367 /* SiriStation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiriStation.swift; sourceTree = "<group>"; };
+		D201C4D82F348A2500187367 /* TVChannel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVChannel.swift; sourceTree = "<group>"; };
+		D201C4DC2F348A9700187367 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		D201C4DE2F348DDF00187367 /* TVHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVHomeView.swift; sourceTree = "<group>"; };
+		D201C4E02F348F5100187367 /* TVViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVViewModel.swift; sourceTree = "<group>"; };
+		D201C4E42F34923500187367 /* M3UParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = M3UParser.swift; sourceTree = "<group>"; };
+		D201C4E62F34995C00187367 /* TVVideoPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVVideoPlayer.swift; sourceTree = "<group>"; };
 		D22727DD2F2E4594002C3C24 /* Soundport.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Soundport.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D22727EA2F2E4597002C3C24 /* SoundportTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SoundportTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D22727F42F2E4597002C3C24 /* SoundportUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SoundportUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -130,6 +142,30 @@
 			path = Siri;
 			sourceTree = "<group>";
 		};
+		D201C4E22F34900D00187367 /* Radio */ = {
+			isa = PBXGroup;
+			children = (
+				D2CE72AB2F31A88C00F69A99 /* StationRow.swift */,
+				D2CE72A82F31A88C00F69A99 /* RegionTabItem.swift */,
+				D2CE72BF2F31C22800F69A99 /* SearchView.swift */,
+				D2CE72C92F31D53D00F69A99 /* SleepTimerSheet.swift */,
+				D2CE72CD2F31E32F00F69A99 /* LiveVisualizer.swift */,
+				D2CE72D12F31F15D00F69A99 /* LiveProgressView.swift */,
+				D2CE72A62F31A88C00F69A99 /* MainHomeView.swift */,
+			);
+			path = Radio;
+			sourceTree = "<group>";
+		};
+		D201C4E32F34903E00187367 /* TV */ = {
+			isa = PBXGroup;
+			children = (
+				D201C4E62F34995C00187367 /* TVVideoPlayer.swift */,
+				D201C4E42F34923500187367 /* M3UParser.swift */,
+				D201C4DE2F348DDF00187367 /* TVHomeView.swift */,
+			);
+			path = TV;
+			sourceTree = "<group>";
+		};
 		D22727D42F2E4594002C3C24 = {
 			isa = PBXGroup;
 			children = (
@@ -169,6 +205,7 @@
 		D2CE72BA2F31A89C00F69A99 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				D201C4D82F348A2500187367 /* TVChannel.swift */,
 				D2CE72AA2F31A88C00F69A99 /* Station.swift */,
 			);
 			path = Model;
@@ -177,6 +214,7 @@
 		D2CE72BB2F31A8AE00F69A99 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				D201C4E02F348F5100187367 /* TVViewModel.swift */,
 				D2CE72A32F31A88C00F69A99 /* HomeViewModel.swift */,
 			);
 			path = ViewModels;
@@ -206,15 +244,11 @@
 		D2CE72BE2F31A92F00F69A99 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				D2CE72D12F31F15D00F69A99 /* LiveProgressView.swift */,
-				D2CE72CD2F31E32F00F69A99 /* LiveVisualizer.swift */,
-				D2CE72C92F31D53D00F69A99 /* SleepTimerSheet.swift */,
-				D2CE72BF2F31C22800F69A99 /* SearchView.swift */,
+				D201C4E32F34903E00187367 /* TV */,
+				D201C4E22F34900D00187367 /* Radio */,
 				D2CE72A92F31A88C00F69A99 /* SoundportApp.swift */,
+				D201C4DC2F348A9700187367 /* MainTabView.swift */,
 				D2CE72A12F31A88C00F69A99 /* ContentView.swift */,
-				D2CE72A62F31A88C00F69A99 /* MainHomeView.swift */,
-				D2CE72A82F31A88C00F69A99 /* RegionTabItem.swift */,
-				D2CE72AB2F31A88C00F69A99 /* StationRow.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -361,6 +395,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D201C4E52F34923800187367 /* M3UParser.swift in Sources */,
 				D2CE72AD2F31A88C00F69A99 /* AudioPlayerManager.swift in Sources */,
 				D2CE72AE2F31A88C00F69A99 /* ContentView.swift in Sources */,
 				D2CE72AF2F31A88C00F69A99 /* FavoritesManager.swift in Sources */,
@@ -368,20 +403,25 @@
 				D2CE72B02F31A88C00F69A99 /* HomeViewModel.swift in Sources */,
 				D201C4D12F3468FD00187367 /* SiriStation.swift in Sources */,
 				D2CE72CC2F31D95F00F69A99 /* CarPlaySceneDelegate.swift in Sources */,
+				D201C4DD2F348A9900187367 /* MainTabView.swift in Sources */,
 				D2CE72C02F31C22C00F69A99 /* SearchView.swift in Sources */,
 				D201C4BC2F3445D900187367 /* PlayRadioIntent.swift in Sources */,
 				D2CE72B12F31A88C00F69A99 /* ImageCacheManager.swift in Sources */,
 				D2CE72C82F31D46E00F69A99 /* SleepTimerManager.swift in Sources */,
 				D2CE72D22F31F16600F69A99 /* LiveProgressView.swift in Sources */,
 				D201C4C02F34464800187367 /* PlayFavoritesIntent.swift in Sources */,
+				D201C4E72F34995E00187367 /* TVVideoPlayer.swift in Sources */,
 				D2CE72D42F31FA6A00F69A99 /* ShazamManager.swift in Sources */,
 				D2CE72B22F31A88C00F69A99 /* MainHomeView.swift in Sources */,
 				D2CE72B32F31A88C00F69A99 /* RadioService.swift in Sources */,
+				D201C4DF2F348DE100187367 /* TVHomeView.swift in Sources */,
 				D2CE72CA2F31D54200F69A99 /* SleepTimerSheet.swift in Sources */,
 				D201C4BE2F3445FC00187367 /* SoundportShortcuts.swift in Sources */,
 				D2CE72B42F31A88C00F69A99 /* RegionTabItem.swift in Sources */,
 				D2CE72B52F31A88C00F69A99 /* SoundportApp.swift in Sources */,
 				D2CE72CE2F31E33100F69A99 /* LiveVisualizer.swift in Sources */,
+				D201C4D92F348A2800187367 /* TVChannel.swift in Sources */,
+				D201C4E12F348F5400187367 /* TVViewModel.swift in Sources */,
 				D2CE72B62F31A88C00F69A99 /* Station.swift in Sources */,
 				D2CE72B72F31A88C00F69A99 /* StationRow.swift in Sources */,
 			);

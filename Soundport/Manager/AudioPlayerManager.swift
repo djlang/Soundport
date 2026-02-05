@@ -112,6 +112,14 @@ class AudioPlayerManager: ObservableObject {
         isPlaying.toggle()
     }
     
+    
+    func stop() {
+        guard let player = player else { return }
+        if isPlaying {
+            player.pause()
+        }
+    }
+    
     // 下一个
     // MARK: - 逻辑修复版
     func next() {
