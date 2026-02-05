@@ -12,12 +12,10 @@ struct SoundportShortcuts: AppShortcutsProvider {
         AppShortcut(
             intent: PlayRadioIntent(),
             phrases: [
-                "用 \(.applicationName) 播放 \(\.$stationName)",
-                "在 \(.applicationName) 开启 \(\.$stationName)",
-                "想听 \(.applicationName) 里的 \(\.$stationName)",
-                "用 声泊电台 播放 \(\.$stationName)",
+                "用 \(.applicationName) 播放 \(\.$target)",
+                "在 \(.applicationName) 开启 \(\.$target)"
             ],
-            shortTitle: "播放电台",
+            shortTitle: "播放广播",
             systemImageName: "radio"
         )
     }
