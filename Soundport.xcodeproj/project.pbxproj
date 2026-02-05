@@ -47,6 +47,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8975D1762F342E6E002B68AD /* Soundport.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Soundport.entitlements; sourceTree = "<group>"; };
 		D22727DD2F2E4594002C3C24 /* Soundport.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Soundport.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D22727EA2F2E4597002C3C24 /* SoundportTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SoundportTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D22727F42F2E4597002C3C24 /* SoundportUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SoundportUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -134,13 +135,14 @@
 		D2CE72AC2F31A88C00F69A99 /* Soundport */ = {
 			isa = PBXGroup;
 			children = (
-				D2CE72CB2F31D95B00F69A99 /* CarPlaySceneDelegate.swift */,
+				8975D1762F342E6E002B68AD /* Soundport.entitlements */,
 				D2CE72BE2F31A92F00F69A99 /* Views */,
 				D2CE72BD2F31A8DC00F69A99 /* Services */,
 				D2CE72BC2F31A8C300F69A99 /* Manager */,
 				D2CE72BB2F31A8AE00F69A99 /* ViewModels */,
 				D2CE72BA2F31A89C00F69A99 /* Model */,
 				D2CE729F2F31A88C00F69A99 /* Assets.xcassets */,
+				D2CE72CB2F31D95B00F69A99 /* CarPlaySceneDelegate.swift */,
 				D2CE72A52F31A88C00F69A99 /* Info.plist */,
 			);
 			path = Soundport;

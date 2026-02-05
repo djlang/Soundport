@@ -47,7 +47,7 @@ class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
     }
 
     func showLoadingState() {
-        let listTemplate = CPListTemplate(title: "枕流", sections: [
+        let listTemplate = CPListTemplate(title: "声泊", sections: [
             CPListSection(items: [CPListItem(text: "正在同步电台列表...", detailText: nil)])
         ])
         interfaceController?.setRootTemplate(listTemplate, animated: false, completion: nil)
@@ -78,7 +78,7 @@ class CarPlaySceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
         }
 
         let section = CPListSection(items: items, header: title, sectionIndexTitle: nil)
-        let listTemplate = CPListTemplate(title: "枕流", sections: [section])
+        let listTemplate = CPListTemplate(title: "声泊", sections: [section])
         
         // 使用模板刷新
         interfaceController?.setRootTemplate(listTemplate, animated: true, completion: nil)
