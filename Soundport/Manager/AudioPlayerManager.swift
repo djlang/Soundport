@@ -62,23 +62,6 @@ class AudioPlayerManager: ObservableObject {
         // 开始播放时先设定为正在缓冲
         self.isBuffering = true
         
-//        if let url = URL(string: station.logoUrl) {
-//            URLSession.shared.dataTask(with: url) {[weak self] data, _, _ in
-//                if let data = data, let image = UIImage(data: data) {
-//                    DispatchQueue.main.async {
-//                        self?.updateNowPlaying(station: station, img: image)
-//                        self?.updateNowPlayingInfo(station: station, img: image)
-//                    }
-//                }
-//                
-//            }
-//        }else {
-//            DispatchQueue.main.async {
-//                self.updateNowPlaying(station: station, img: UIImage(systemName: "radio.fill"))
-//                self.updateNowPlayingInfo(station: station, img: UIImage(systemName: "radio.fill"))
-//            }
-//        }
-        
         if let url = safeURL(from: station.logoUrl) {
             URLSession.shared.dataTask(with: url) { [weak self] data, _, error in
                 guard let data = data,

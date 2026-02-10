@@ -15,15 +15,17 @@ class TVViewModel: ObservableObject {
     @Published var isLoading = false
 
     // 这里使用一个常见的 GitHub 开源 M3U 链接（IPv6/IPv4 混合）
-    //https://live.fanmingming.com/tv/m3u/ipv6.m3u
-    //https://iptv-org.github.io/iptv/countries/cn.m3u
-    //https://raw.githubusercontent.com/YueChan/Live/main/IPTV.m3u
-    //https://raw.githubusercontent.com/hujingguang/ChinaIPTV/main/grouped.m3u8
+//    private let m3uURL = "https://live.fanmingming.com/tv/m3u/ipv6.m3u"
+   
+//    private let m3uURL = "https://iptv-org.github.io/iptv/countries/cn.m3u"
     
-    //https://raw.githubusercontent.com/fanmingming/live/main/tv/m3u/ipv6.m3u
+//    private let m3uURL = "https://raw.githubusercontent.com/YueChan/Live/main/IPTV.m3u"
+//    private let m3uURL = "https://raw.githubusercontent.com/hujingguang/ChinaIPTV/main/grouped.m3u8"
     
-    private let m3uURL = "https://live.fanmingming.com/tv/m3u/ipv6.m3u"
-
+//    private let m3uURL = "https://raw.githubusercontent.com/fanmingming/live/main/tv/m3u/ipv6.m3u"
+    
+//    private let m3uURL = "https://live.fanmingming.com/tv/m3u/ipv6.m3u"
+    private let m3uURL = "https://raw.githubusercontent.com/youshandefeiyang/IPTV/main/main.m3u"
     init() {
         fetchTVChannels()
     }

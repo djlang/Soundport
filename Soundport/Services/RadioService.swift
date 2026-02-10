@@ -106,8 +106,14 @@ class RadioService {
         // 清理搜索词中的特殊空格或字符（你报错的 URL 里似乎含有一个非标准空格 %E2%80%86）
         let cleanedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
         
+        //国内搜索
+//        guard let encodedName = cleanedName.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+//              let url = URL(string: "https://de1.api.radio-browser.info/json/stations/byname/\(encodedName)?countrycode=CN&limit=20") else {
+//            return []
+//        }
+        
         guard let encodedName = cleanedName.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
-              let url = URL(string: "https://de1.api.radio-browser.info/json/stations/byname/\(encodedName)?countrycode=CN&limit=20") else {
+              let url = URL(string: "https://de1.api.radio-browser.info/json/stations/byname/\(encodedName)?limit=50") else {
             return []
         }
         

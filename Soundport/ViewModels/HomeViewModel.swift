@@ -81,10 +81,11 @@ class HomeViewModel: ObservableObject {
             allRegions.append(contentsOf: additional)
             
             let sortedResult = sortRegions(allRegions)
+            let finalFilteredResult = filterDuplicateStations(in: sortedResult) // 执行去重
             
             // 3. UI 线程更新
-            self.regions = sortedResult
-            AudioPlayerManager.shared.allRegions = sortedResult
+            self.regions = finalFilteredResult
+            AudioPlayerManager.shared.allRegions = finalFilteredResult
             
             if self.selectedRegionId.isEmpty, let firstRegion = self.regions.first {
                 self.selectedRegionId = firstRegion.id
@@ -103,7 +104,7 @@ class HomeViewModel: ObservableObject {
     }
     
     // MARK: - 4. 搜索与排序 (逻辑保持不变)
-    
+
     func performSearch() async {
         searchTimer?.invalidate()
         searchTimer = Timer.scheduledTimer(withTimeInterval: 0.6, repeats: false) { _ in
@@ -164,6 +165,25 @@ class HomeViewModel: ObservableObject {
             let index1 = topPriority.firstIndex(of: r1.name) ?? 999
             let index2 = topPriority.firstIndex(of: r2.name) ?? 999
             return index1 != index2 ? index1 < index2 : r1.name < r2.name
+        }
+    }
+    
+    
+    private func filterDuplicateStations(in regions: [Region]) -> [Region] {
+        return regions.map { region in
+            var seenNames = Set<String>()
+            let uniqueStations = region.stations.filter { station in
+                // 去掉空格后对比名字
+                let name = station.name.trimmingCharacters(in: .whitespaces)
+                if seenNames.contains(name) {
+                    return false // 名字重复了，丢掉
+                } else {
+                    seenNames.insert(name)
+                    return true // 第一次见，保留
+                }
+            }
+            // 返回去重后的 Region 副本
+            return Region(id: region.id, name: region.name, stations: uniqueStations)
         }
     }
 }
