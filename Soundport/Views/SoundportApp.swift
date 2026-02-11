@@ -14,7 +14,7 @@ struct SoundportApp: App {
     
     var body: some Scene {
         WindowGroup {
-            MainHomeView()
+            RadioHomeView()
         }
     }
 }

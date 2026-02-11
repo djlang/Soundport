@@ -37,6 +37,12 @@
 		D2CE72D02F31E70F00F69A99 /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CE72CF2F31E70D00F69A99 /* CacheManager.swift */; };
 		D2CE72D22F31F16600F69A99 /* LiveProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CE72D12F31F15D00F69A99 /* LiveProgressView.swift */; };
 		D2CE72D42F31FA6A00F69A99 /* ShazamManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CE72D32F31FA6800F69A99 /* ShazamManager.swift */; };
+		D2DE79EF2F3C768C006B8914 /* RegionMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2DE79EE2F3C768C006B8914 /* RegionMapper.swift */; };
+		D2DE79F12F3C76A1006B8914 /* RadioCategorySerivce.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2DE79F02F3C76A1006B8914 /* RadioCategorySerivce.swift */; };
+		D2DE79F52F3C76FF006B8914 /* RadioHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2DE79F42F3C76FF006B8914 /* RadioHomeView.swift */; };
+		D2DE79F72F3C7728006B8914 /* RadioViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2DE79F62F3C7728006B8914 /* RadioViewModel.swift */; };
+		D2DE79F92F3C7777006B8914 /* ProvincePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2DE79F82F3C7777006B8914 /* ProvincePickerView.swift */; };
+		D2DE79FB2F3C7C54006B8914 /* RadioRequestTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2DE79FA2F3C7C4F006B8914 /* RadioRequestTask.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,6 +97,12 @@
 		D2CE72CF2F31E70D00F69A99 /* CacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
 		D2CE72D12F31F15D00F69A99 /* LiveProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveProgressView.swift; sourceTree = "<group>"; };
 		D2CE72D32F31FA6800F69A99 /* ShazamManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShazamManager.swift; sourceTree = "<group>"; };
+		D2DE79EE2F3C768C006B8914 /* RegionMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegionMapper.swift; sourceTree = "<group>"; };
+		D2DE79F02F3C76A1006B8914 /* RadioCategorySerivce.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioCategorySerivce.swift; sourceTree = "<group>"; };
+		D2DE79F42F3C76FF006B8914 /* RadioHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioHomeView.swift; sourceTree = "<group>"; };
+		D2DE79F62F3C7728006B8914 /* RadioViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioViewModel.swift; sourceTree = "<group>"; };
+		D2DE79F82F3C7777006B8914 /* ProvincePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProvincePickerView.swift; sourceTree = "<group>"; };
+		D2DE79FA2F3C7C4F006B8914 /* RadioRequestTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioRequestTask.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -146,12 +158,14 @@
 			isa = PBXGroup;
 			children = (
 				D2CE72AB2F31A88C00F69A99 /* StationRow.swift */,
+				D2DE79F82F3C7777006B8914 /* ProvincePickerView.swift */,
 				D2CE72A82F31A88C00F69A99 /* RegionTabItem.swift */,
 				D2CE72BF2F31C22800F69A99 /* SearchView.swift */,
 				D2CE72C92F31D53D00F69A99 /* SleepTimerSheet.swift */,
 				D2CE72CD2F31E32F00F69A99 /* LiveVisualizer.swift */,
 				D2CE72D12F31F15D00F69A99 /* LiveProgressView.swift */,
 				D2CE72A62F31A88C00F69A99 /* MainHomeView.swift */,
+				D2DE79F42F3C76FF006B8914 /* RadioHomeView.swift */,
 			);
 			path = Radio;
 			sourceTree = "<group>";
@@ -207,6 +221,7 @@
 			children = (
 				D201C4D82F348A2500187367 /* TVChannel.swift */,
 				D2CE72AA2F31A88C00F69A99 /* Station.swift */,
+				D2DE79EE2F3C768C006B8914 /* RegionMapper.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -216,6 +231,7 @@
 			children = (
 				D201C4E02F348F5100187367 /* TVViewModel.swift */,
 				D2CE72A32F31A88C00F69A99 /* HomeViewModel.swift */,
+				D2DE79F62F3C7728006B8914 /* RadioViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -236,7 +252,9 @@
 		D2CE72BD2F31A8DC00F69A99 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				D2DE79FA2F3C7C4F006B8914 /* RadioRequestTask.swift */,
 				D2CE72A72F31A88C00F69A99 /* RadioService.swift */,
+				D2DE79F02F3C76A1006B8914 /* RadioCategorySerivce.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -396,10 +414,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				D201C4E52F34923800187367 /* M3UParser.swift in Sources */,
+				D2DE79F52F3C76FF006B8914 /* RadioHomeView.swift in Sources */,
 				D2CE72AD2F31A88C00F69A99 /* AudioPlayerManager.swift in Sources */,
 				D2CE72AE2F31A88C00F69A99 /* ContentView.swift in Sources */,
 				D2CE72AF2F31A88C00F69A99 /* FavoritesManager.swift in Sources */,
 				D2CE72D02F31E70F00F69A99 /* CacheManager.swift in Sources */,
+				D2DE79F92F3C7777006B8914 /* ProvincePickerView.swift in Sources */,
 				D2CE72B02F31A88C00F69A99 /* HomeViewModel.swift in Sources */,
 				D201C4D12F3468FD00187367 /* SiriStation.swift in Sources */,
 				D2CE72CC2F31D95F00F69A99 /* CarPlaySceneDelegate.swift in Sources */,
@@ -413,12 +433,16 @@
 				D201C4E72F34995E00187367 /* TVVideoPlayer.swift in Sources */,
 				D2CE72D42F31FA6A00F69A99 /* ShazamManager.swift in Sources */,
 				D2CE72B22F31A88C00F69A99 /* MainHomeView.swift in Sources */,
+				D2DE79FB2F3C7C54006B8914 /* RadioRequestTask.swift in Sources */,
 				D2CE72B32F31A88C00F69A99 /* RadioService.swift in Sources */,
 				D201C4DF2F348DE100187367 /* TVHomeView.swift in Sources */,
+				D2DE79F72F3C7728006B8914 /* RadioViewModel.swift in Sources */,
+				D2DE79F12F3C76A1006B8914 /* RadioCategorySerivce.swift in Sources */,
 				D2CE72CA2F31D54200F69A99 /* SleepTimerSheet.swift in Sources */,
 				D201C4BE2F3445FC00187367 /* SoundportShortcuts.swift in Sources */,
 				D2CE72B42F31A88C00F69A99 /* RegionTabItem.swift in Sources */,
 				D2CE72B52F31A88C00F69A99 /* SoundportApp.swift in Sources */,
+				D2DE79EF2F3C768C006B8914 /* RegionMapper.swift in Sources */,
 				D2CE72CE2F31E33100F69A99 /* LiveVisualizer.swift in Sources */,
 				D201C4D92F348A2800187367 /* TVChannel.swift in Sources */,
 				D201C4E12F348F5400187367 /* TVViewModel.swift in Sources */,

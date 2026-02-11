@@ -1,0 +1,286 @@
+//
+//  RadioHomeView.swift
+//  Soundport
+//
+//  Created by dengjinlang on 2026/2/10.
+//
+
+import SwiftUI
+import Combine
+
+struct RadioHomeView: View {
+    private let miniPlayerHeight: CGFloat = 160
+    @StateObject private var viewModel = RadioViewModel.shared
+    @ObservedObject private var playerManager = AudioPlayerManager.shared
+    
+    @State private var showSearchSheet = false
+    @State private var showSleepTimerSheet = false
+    @ObservedObject var sleepManager = SleepTimerManager.shared
+    
+    @StateObject private var shazamManager = ShazamManager()
+    @State private var angle: Double = 0
+    
+    var body: some View {
+        NavigationView {
+            ZStack(alignment: .bottom) {
+                HStack(spacing: 0) {
+                    // 1. 左侧分类导航栏
+                    leftSidebar
+                    // 2. 右侧电台内容区
+                    rightStationContent
+                }
+                
+                // 3. 底部播放器
+                if playerManager.currentStation != nil {
+                    miniPlayer
+                        .transition(.move(edge: .bottom))
+                        .zIndex(2)
+                }
+                
+                // 4. 全局加载状态
+                if viewModel.isLoading {
+                    loadingOverlay
+                }
+            }
+            .navigationTitle("声泊电台")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Image(systemName: "leaf.fill")
+                        .foregroundColor(.green.opacity(0.8))
+                }
+            }
+            .sheet(isPresented: $showSleepTimerSheet) {
+                SleepTimerSheet()
+            }
+            // 地区选择弹出层
+            .sheet(isPresented: $viewModel.showProvincePicker) {
+                ProvincePickerView(viewModel: viewModel)
+            }
+        }
+        .navigationViewStyle(.stack)
+    }
+    
+    // MARK: - 子组件：左侧分类导航
+    private var leftSidebar: some View {
+        ScrollView(showsIndicators: false) {
+            VStack(spacing: 0) {
+                ForEach(RadioCategory.allCases) { category in
+                    let isSelected = viewModel.selectedCategory == category
+                    
+                    VStack(spacing: 6) {
+                        Image(systemName: category.icon)
+                            .font(.system(size: 20))
+                            .foregroundColor(isSelected ? .blue : .gray)
+                        
+                        // 如果是地区分类，显示具体的省份名（如：广东）
+                        Text(category == .region ? viewModel.selectedProvince : category.rawValue)
+                            .font(.system(size: 12, weight: isSelected ? .bold : .regular))
+                            .foregroundColor(isSelected ? .blue : .primary)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 75)
+                    .background(isSelected ? Color(UIColor.systemBackground) : Color.clear)
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        if category == .region && viewModel.selectedCategory == .region {
+                            // 如果已经在地区页，再次点击弹出省份选择
+                            viewModel.showProvincePicker = true
+                        } else {
+                            Task { await viewModel.selectCategory(category) }
+                        }
+                    }
+                    
+                    Divider().padding(.horizontal, 10).opacity(0.3)
+                }
+            }
+            .padding(.top, 10)
+            
+            // 避开播放器遮挡
+            Spacer(minLength: 120)
+        }
+        .frame(width: 85)
+        .background(Color(UIColor.systemGray6).opacity(0.8))
+        .overlay(Divider(), alignment: .trailing)
+    }
+    
+    // MARK: - 子组件：右侧列表内容
+    private var rightStationContent: some View {
+        VStack(spacing: 0) {
+            // 伪搜索框
+            searchBarHeader
+            
+            if viewModel.stations.isEmpty && !viewModel.isLoading {
+                emptyStateView
+            } else {
+                List {
+                    // 当前分类标题头
+                    Section(header: Text(viewModel.selectedCategory == .region ? viewModel.selectedProvince : viewModel.selectedCategory.rawValue).font(.subheadline)) {
+                        ForEach(viewModel.stations) { station in
+                            StationRow(station: station)
+                                .contentShape(Rectangle())
+                                .onTapGesture {
+                                    playerManager.play(station: station)
+                                }
+                        }
+                    }
+                    
+                    // 底部占位
+                    Color.clear.frame(height: 100).listRowSeparator(.hidden)
+                }
+                .listStyle(.plain)
+            }
+        }
+    }
+    
+    private var searchBarHeader: some View {
+        HStack {
+            Image(systemName: "magnifyingglass")
+            Text("搜索电台...")
+            Spacer()
+        }
+        .padding(10)
+        .background(Color(.systemGray6))
+        .cornerRadius(10)
+        .padding()
+        .foregroundColor(.secondary)
+        .onTapGesture { showSearchSheet = true }
+        .sheet(isPresented: $showSearchSheet) {
+            SearchView()
+        }
+    }
+    
+    private var emptyStateView: some View {
+        VStack(spacing: 15) {
+            Spacer()
+            Image(systemName: viewModel.selectedCategory == .favorites ? "heart.slash" : "antenna.radiowaves.left.and.right.slash")
+                .font(.system(size: 40))
+                .foregroundColor(.gray.opacity(0.5))
+            Text(viewModel.selectedCategory == .favorites ? "暂无收藏电台" : "该分类暂无数据")
+                .foregroundColor(.secondary)
+            if viewModel.selectedCategory == .favorites {
+                Text("点击电台后的红心即可收藏").font(.caption2).foregroundColor(.gray)
+            }
+            Spacer()
+        }
+    }
+
+    // MARK: - 其他原有组件逻辑（保持不变或微调）
+    
+    private var loadingOverlay: some View {
+        ZStack {
+            Color.black.opacity(0.05).ignoresSafeArea()
+            ProgressView("正在连接广播...")
+                .padding()
+                .background(.ultraThinMaterial)
+                .cornerRadius(10)
+        }
+    }
+
+    private var miniPlayer: some View {
+        Group {
+            if let station = playerManager.currentStation {
+                VStack(spacing: 0) {
+                    Divider()
+                    VStack {
+                        HStack(spacing: 15) {
+                            // Logo 动画
+                            CachedImage(url: station.logoUrl) { image in
+                                image.resizable().scaledToFill()
+                            } placeholder: {
+                                Image(systemName: "radio").foregroundColor(.blue.opacity(0.5))
+                            }
+                            .frame(width: 38, height: 38)
+                            .cornerRadius(19)
+                            .rotationEffect(.degrees(angle))
+                            .onAppear { startRotate() }
+                            .id("logo_\(station.id)")
+
+                            VStack(alignment: .leading) {
+                                Text(station.name).font(.system(size: 15, weight: .bold)).lineLimit(1)
+                                Text(station.frequency).font(.system(size: 12)).foregroundColor(.secondary)
+                            }
+                            
+                            Spacer()
+                            
+                            // 收藏按钮
+                            let isFav = FavoritesManager.shared.isFavorite(station)
+                            Button(action: {
+                                withAnimation(.spring()) {
+                                    FavoritesManager.shared.toggleFavorite(station)
+                                }
+                            }) {
+                                Image(systemName: isFav ? "heart.fill" : "heart")
+                                    .foregroundColor(isFav ? .red : .gray)
+                            }
+                        }
+                        
+                        LiveProgressView().padding(.vertical, 5)
+                        
+                        // 播控按钮
+                        HStack(spacing: 25) {
+                            Button(action: {
+                                shazamManager.isRecognizing ? shazamManager.stopRecognition() : shazamManager.startRecognition()
+                            }) {
+                                Image(systemName: shazamManager.isRecognizing ? "waveform.and.mic" : "shazam.logo")
+                                    .foregroundColor(shazamManager.isRecognizing ? .blue : .primary)
+                            }
+                            
+                            Spacer()
+                            
+                            Button(action: { playerManager.previous() }) {
+                                Image(systemName: "backward.fill")
+                            }
+                            
+                            Button(action: { playerManager.toggle() }) {
+                                if playerManager.isBuffering {
+                                    ProgressView().controlSize(.small)
+                                } else {
+                                    Image(systemName: playerManager.isPlaying ? "pause.fill" : "play.fill")
+                                        .font(.title2)
+                                }
+                            }
+                            .frame(width: 40)
+                            
+                            Button(action: { playerManager.next() }) {
+                                Image(systemName: "forward.fill")
+                            }
+                            
+                            Spacer()
+                            
+                            Button(action: { showSleepTimerSheet = true }) {
+                                VStack(spacing: 2) {
+                                    Image(systemName: "moon.stars.fill")
+                                    if sleepManager.isActive {
+                                        Text(sleepManager.formattedRemainingTime).font(.system(size: 8, design: .monospaced))
+                                    }
+                                }
+                                .foregroundColor(sleepManager.isActive ? .purple : .primary)
+                            }
+                        }
+                        .padding(.horizontal)
+                        .padding(.bottom, 30)
+                    }
+                    .padding()
+                    .background(.ultraThinMaterial)
+                }
+                .id(station.id)
+            }
+        }
+        .animation(.spring(), value: playerManager.currentStation?.id)
+    }
+
+    private func startRotate() {
+        angle = 0
+        withAnimation(.linear(duration: 8).repeatForever(autoreverses: false)) {
+            angle = 360
+        }
+    }
+}
+
+
+struct RadioHomeView_Previews: PreviewProvider {
+    static var previews: some View {
+        RadioHomeView()
+    }
+}
