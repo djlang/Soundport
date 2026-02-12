@@ -18,6 +18,7 @@
 		D201C4E52F34923800187367 /* M3UParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D201C4E42F34923500187367 /* M3UParser.swift */; };
 		D201C4E72F34995E00187367 /* TVVideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D201C4E62F34995C00187367 /* TVVideoPlayer.swift */; };
 		D2CA36442F3D87C500BBD738 /* CountryPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CA36432F3D87B600BBD738 /* CountryPickerView.swift */; };
+		D2CA364D2F3DCD9E00BBD738 /* MarqueeText.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CA364C2F3DCD9D00BBD738 /* MarqueeText.swift */; };
 		D2CE72AD2F31A88C00F69A99 /* AudioPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CE72A02F31A88C00F69A99 /* AudioPlayerManager.swift */; };
 		D2CE72AE2F31A88C00F69A99 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CE72A12F31A88C00F69A99 /* ContentView.swift */; };
 		D2CE72AF2F31A88C00F69A99 /* FavoritesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CE72A22F31A88C00F69A99 /* FavoritesManager.swift */; };
@@ -78,6 +79,7 @@
 		D22727EA2F2E4597002C3C24 /* SoundportTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SoundportTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D22727F42F2E4597002C3C24 /* SoundportUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SoundportUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2CA36432F3D87B600BBD738 /* CountryPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryPickerView.swift; sourceTree = "<group>"; };
+		D2CA364C2F3DCD9D00BBD738 /* MarqueeText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarqueeText.swift; sourceTree = "<group>"; };
 		D2CE729F2F31A88C00F69A99 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D2CE72A02F31A88C00F69A99 /* AudioPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerManager.swift; sourceTree = "<group>"; };
 		D2CE72A12F31A88C00F69A99 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -165,7 +167,6 @@
 				D2CE72A82F31A88C00F69A99 /* RegionTabItem.swift */,
 				D2CE72BF2F31C22800F69A99 /* SearchView.swift */,
 				D2CE72C92F31D53D00F69A99 /* SleepTimerSheet.swift */,
-				D2CE72CD2F31E32F00F69A99 /* LiveVisualizer.swift */,
 				D2CE72D12F31F15D00F69A99 /* LiveProgressView.swift */,
 				D2CE72A62F31A88C00F69A99 /* MainHomeView.swift */,
 				D2DE79F42F3C76FF006B8914 /* RadioHomeView.swift */,
@@ -203,9 +204,20 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		D2CA364B2F3DCD9700BBD738 /* Tools */ = {
+			isa = PBXGroup;
+			children = (
+				D2CA364C2F3DCD9D00BBD738 /* MarqueeText.swift */,
+				D2DE79EE2F3C768C006B8914 /* RegionMapper.swift */,
+				D2CE72CD2F31E32F00F69A99 /* LiveVisualizer.swift */,
+			);
+			path = Tools;
+			sourceTree = "<group>";
+		};
 		D2CE72AC2F31A88C00F69A99 /* Soundport */ = {
 			isa = PBXGroup;
 			children = (
+				D2CA364B2F3DCD9700BBD738 /* Tools */,
 				D201C4C12F34468E00187367 /* Siri */,
 				D2CE72BE2F31A92F00F69A99 /* Views */,
 				D2CE72BD2F31A8DC00F69A99 /* Services */,
@@ -224,7 +236,6 @@
 			children = (
 				D201C4D82F348A2500187367 /* TVChannel.swift */,
 				D2CE72AA2F31A88C00F69A99 /* Station.swift */,
-				D2DE79EE2F3C768C006B8914 /* RegionMapper.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -421,6 +432,7 @@
 				D2CE72AD2F31A88C00F69A99 /* AudioPlayerManager.swift in Sources */,
 				D2CE72AE2F31A88C00F69A99 /* ContentView.swift in Sources */,
 				D2CE72AF2F31A88C00F69A99 /* FavoritesManager.swift in Sources */,
+				D2CA364D2F3DCD9E00BBD738 /* MarqueeText.swift in Sources */,
 				D2CE72D02F31E70F00F69A99 /* CacheManager.swift in Sources */,
 				D2DE79F92F3C7777006B8914 /* ProvincePickerView.swift in Sources */,
 				D2CE72B02F31A88C00F69A99 /* HomeViewModel.swift in Sources */,

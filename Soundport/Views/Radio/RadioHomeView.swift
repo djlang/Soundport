@@ -97,7 +97,6 @@ struct RadioHomeView: View {
                             Task { await viewModel.selectCategory(category) }
                         }
                         
-                        
                     }
                     
                     Divider().padding(.horizontal, 10).opacity(0.3)
@@ -228,7 +227,7 @@ struct RadioHomeView: View {
     private var loadingOverlay: some View {
         ZStack {
             Color.black.opacity(0.05).ignoresSafeArea()
-            ProgressView("正在连接广播...")
+            ProgressView("正在连接广播站...")
                 .padding()
                 .background(.ultraThinMaterial)
                 .cornerRadius(10)
@@ -259,10 +258,8 @@ struct RadioHomeView: View {
                             Spacer()
 
                             VStack {
-                               
-                                Text(station.name)
-                                    .font(.system(size: 15, weight: .bold))
-                                    .lineLimit(1)
+                                MarqueeText(text: station.name,font: .system(size: 15, weight: .bold))
+                                    .frame(maxWidth: .infinity)
                                     .transition(.asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity),
                                                            removal: .move(edge: .leading).combined(with: .opacity)))
                                 Text(station.frequency)

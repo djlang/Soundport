@@ -11,7 +11,7 @@ enum RadioTask {
     case hot(limit: Int, offset: Int)
     case region(state: String, limit: Int, offset: Int)
     case tag(name: String, limit: Int, offset: Int)
-    case national
+    case national(limit: Int, offset: Int)
     case country(code: String, limit: Int, offset: Int)
     case search(query: String, limit: Int, offset: Int)
 
@@ -80,8 +80,10 @@ enum RadioTask {
                 URLQueryItem(name: "offset", value: "\(offset)")
             ])
             
-        case .national:
+        case .national(let limit, let offset):
             items.append(contentsOf: [
+                URLQueryItem(name: "limit", value: "\(limit)"),
+                URLQueryItem(name: "offset", value: "\(offset)"),
                 URLQueryItem(name: "name", value: "CNR"),
                 URLQueryItem(name: "countrycode", value: "CN")
             ])

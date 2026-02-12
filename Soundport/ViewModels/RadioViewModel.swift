@@ -129,7 +129,7 @@ class RadioViewModel: ObservableObject {
                 let apiParam = RegionMapper.toApiParameterForCountry(selectedCountry)
                 task = .country(code: apiParam, limit: pageSize, offset: offset)
             case .national:
-                task = .national
+                task = .national(limit: pageSize,offset: offset)
             case .favorites:
                 let favs = FavoritesManager.shared.favoriteStations
                 self.stations = favs
@@ -241,12 +241,39 @@ class RadioViewModel: ObservableObject {
     
 
     private func filterDuplicates(_ list: [Station]) -> [Station] {
+        // 1. 记录集合
         var seenIDs = Set<String>()
-        // 结合 stations 已有的 ID 和新获取的进行去重
-        let existingIDs = Set(stations.map { $0.changeuuid })
-        seenIDs.formUnion(existingIDs)
+        var seenNames = Set<String>()
         
-        return list.filter { seenIDs.insert($0.changeuuid).inserted }
+        // 2. 将现有电台信息存入集合
+        for station in stations {
+            seenIDs.insert(station.changeuuid)
+            seenNames.insert(station.name.lowercased().trimmingCharacters(in: .whitespaces))
+        }
+        
+        // 3. 【关键步骤】对新获取的列表进行预排序
+        // 将有 logoUrl 的排在前面，没有的排在后面
+        let sortedList = list.sorted { (a, b) -> Bool in
+            let aHasLogo = !(a.logoUrl.isEmpty)
+            let bHasLogo = !(b.logoUrl.isEmpty)
+            if aHasLogo != bHasLogo {
+                return aHasLogo // 有 Logo 的优先
+            }
+            return false // 都有或都没有则保持原序（原序通常按点击量排，也很重要）
+        }
+        
+        // 4. 执行去重
+        return sortedList.filter { station in
+            let normalizedName = station.name.lowercased().trimmingCharacters(in: .whitespaces)
+            
+            // 尝试插入 UUID 和 名字
+            let isNewID = seenIDs.insert(station.changeuuid).inserted
+            let isNewName = seenNames.insert(normalizedName).inserted
+            
+            // 如果是全新的电台（ID和名字都没见过），则保留
+            // 由于 sortedList 里有 Logo 的在前，所以同名电台第一个被遇到的肯定是有 Logo 的
+            return isNewID && isNewName
+        }
     }
 }
 
