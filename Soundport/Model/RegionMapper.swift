@@ -100,13 +100,13 @@ struct RegionMapper {
             "江苏": "Kiangsu",
             "浙江": "Chekiang",
             "湖南": "Hunan",
-            "湖北": "Hupeh",
+            "湖北": "Hupei",
             "四川": "Szechuan",
             "山东": "Shantung",
             "天津": "Tientsin",
             "河北": "Hopei",
             "山西": "Shansi",
-            "内蒙古": "Neimenggu",
+            "内蒙古": "Inner Mongolia",
             "辽宁": "Liaoning",
             "吉林": "Jilin",
             "黑龙江": "Heilungkiang",
@@ -125,9 +125,7 @@ struct RegionMapper {
             "青海": "Tsinghai",
             "宁夏": "Ninghsia",
             "新疆": "Sinkiang",
-            
-            
-            
+        
         ]
         // 如果没在字典里，尝试直接返回中文（API 也支持部分中文搜索）
         return apiMap[chineseName] ?? chineseName

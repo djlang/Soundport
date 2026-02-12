@@ -125,8 +125,57 @@ struct RadioHomeView: View {
                         }
                     }
                     
+                    // 2. 翻页加载触发器 (关键位置)
+                    // --- 翻页/底部状态区 ---
+                    if !viewModel.stations.isEmpty && viewModel.selectedCategory != .favorites {
+                        Group {
+                            if viewModel.isFetchingMore {
+                                // 1. 正在加载中
+                                HStack {
+                                    Spacer()
+                                    ProgressView("正在加载更多...")
+                                    Spacer()
+                                }
+                            } else if viewModel.loadError {
+                                // 2. 加载失败，点击重试
+                                Button(action: {
+                                    viewModel.loadError = false
+                                    Task { await viewModel.loadData(isNextPage: true) }
+                                }) {
+                                    HStack {
+                                        Spacer()
+                                        VStack(spacing: 5) {
+                                            Image(systemName: "exclamationmark.triangle")
+                                            Text("加载失败，点击重试").font(.footnote)
+                                        }
+                                        Spacer()
+                                    }
+                                }
+                                .foregroundColor(.secondary)
+                            } else if !viewModel.canLoadMore {
+                                // 3. 加载到最后了
+                                HStack {
+                                    Spacer()
+                                    Text("— 已显示全部电台 —")
+                                        .font(.caption2)
+                                        .foregroundColor(.gray)
+                                    Spacer()
+                                }
+                            } else {
+                                // 4. 准备加载触发器：这是一个看不见的透明层，滑动到它时触发
+                                Color.clear
+                                    .frame(height: 50)
+                                    .onAppear {
+                                        Task { await viewModel.loadData(isNextPage: true) }
+                                    }
+                            }
+                        }
+                        .listRowSeparator(.hidden)
+                        .padding(.vertical, 10)
+                    }
+                    
                     // 底部占位
-                    Color.clear.frame(height: 100).listRowSeparator(.hidden)
+                    Color.clear.frame(height: 120).listRowSeparator(.hidden)
                 }
                 .listStyle(.plain)
             }

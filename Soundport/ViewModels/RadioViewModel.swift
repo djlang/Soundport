@@ -40,164 +40,119 @@ enum RadioCategory: String, CaseIterable, Identifiable {
     }
 }
 
+
+
 @MainActor
 class RadioViewModel: ObservableObject {
-    private var cancellables = Set<AnyCancellable>()
     static let shared = RadioViewModel()
     
-    
-    
-    // MARK: - 状态属性
-    @Published var selectedCategory: RadioCategory = .hot
-    @Published var selectedProvince: String = "广东" // 地区分类的具体省份
-    @Published var stations: [Station] = []        // 当前右侧显示的电台列表
+    @Published var selectedCategory: RadioCategory = .favorites
+    @Published var selectedProvince: String = "广东"
+    @Published var stations: [Station] = []
     @Published var isLoading: Bool = false
+    @Published var isFetchingMore: Bool = false
+    @Published var canLoadMore: Bool = true
+    @Published var showProvincePicker: Bool = false
     
-    // 搜索相关
-    @Published var searchText: String = ""
-    @Published var searchResults: [Station] = []
-    @Published var isSearching: Bool = false
-    @Published var showProvincePicker: Bool = false // 控制省份点选弹窗
+    @Published var loadError: Bool = false // 记录是否加载失败
     
-    private var searchTimer: Timer?
-    
+    private var currentPage = 0
+    private let pageSize = 10
     private let service = RadioCategorySerivce.shared
-    
-    // MARK: - 初始化
+
     private init() {
-        // 监听收藏夹变化，实时刷新右侧列表
-//        FavoritesManager.shared.$favoriteStations
-//            .receive(on: RunLoop.main)
-//            .sink { [weak self] _ in
-//                if self?.selectedCategory == .favorites {
-//                    self?.loadCurrentCategoryData()
-//                }
-//            }
-//            .store(in: &cancellables)
-            
-        Task {
-            await selectCategory(.favorites) // 默认进入
-        }
+        Task { await selectCategory(.hot) }
     }
-    
-    // MARK: - 核心业务逻辑
-    
-    /// 切换左侧分类
+
+    /// 切换大类
     func selectCategory(_ category: RadioCategory) async {
         self.selectedCategory = category
-        await loadCurrentCategoryData()
+        self.currentPage = 0
+        self.canLoadMore = true
+        await loadData(isNextPage: false)
     }
-    
-    /// 切换具体省份（地区点选后调用）
+
+    /// 切换省份
     func changeProvince(to province: String) async {
         self.selectedProvince = province
-        self.selectedCategory = .region
-        await loadCurrentCategoryData()
+        await selectCategory(.region)
     }
-    
-    /// 根据当前分类加载右侧数据
-    func loadCurrentCategoryData() async {
-        self.isLoading = true
-        self.stations = [] // 清空当前列表
+
+    /// 核心加载方法
+    func loadData(isNextPage: Bool = false) async {
+        guard !isLoading && !isFetchingMore else { return }
+        
+        if isNextPage {
+            guard canLoadMore else { return }
+            isFetchingMore = true
+        } else {
+            isLoading = true
+            stations = []
+            currentPage = 0
+        }
+
+        let offset = currentPage * pageSize
         
         do {
+            let task: RadioTask
             switch selectedCategory {
+            case .hot:
+                task = .hot(limit: pageSize, offset: offset)
+            case .region:
+                let apiParam = RegionMapper.toApiParameter(selectedProvince)
+                task = .region(state: apiParam, limit: pageSize, offset: offset)
+            case .national:
+                task = .national
             case .favorites:
                 self.stations = FavoritesManager.shared.favoriteStations
-                
-            case .hot:
-                // 假设 RadioService 有获取热门的方法，或者直接按点击量搜
-                self.stations = try await service.searchStations(name: " ", limit: 20)
-                
-            case .region:
-                // 使用 RegionMapper 将中文转为 API 参数 (如 "广东" -> "Guangdong")
-                let apiParam = RegionMapper.toApiParameter(selectedProvince)
-                // 这里假设你 RadioService 增加了 fetchByState 方法
-                self.stations = try await service.fetchByState(state: apiParam, limit: 20)
-                
-            case .national:
-                self.stations = try await service.fetchNationalStations()
-                
-            case .traffic, .music, .news, .sports, .business, .culture:
-                // 按标签搜索：如 tag="traffic"
-                let tagMap: [RadioCategory: String] = [.traffic: "traffic", .music: "music", .news: "news", .sports: "sports", .business: "business", .culture: "culture"]
-                self.stations = try await service.fetchByTag(tag: tagMap[selectedCategory] ?? "")
-            
+                self.isLoading = false
+                return
+            default:
+                // 对应音乐、交通、新闻等标签分类
+                let tag = categoryToTag(selectedCategory)
+                task = .tag(name: tag, limit: pageSize, offset: offset)
             }
-            
-            // 统一去重处理
-            self.stations = filterDuplicates(self.stations)
-            
-            // 同步给播放器（用于切歌列表）
-            AudioPlayerManager.shared.allRegions = [Region(id: "current", name: selectedCategory.rawValue, stations: self.stations)]
+
+            let newStations = try await service.executeTask(task)
+            let filtered = filterDuplicates(newStations)
+
+            if isNextPage {
+                self.stations.append(contentsOf: filtered)
+            } else {
+                self.stations = filtered
+            }
+
+            // 更新状态
+            self.canLoadMore = newStations.count >= pageSize
+            self.currentPage += 1
             
         } catch {
-            print("❌ 加载分类数据失败: \(error)")
+            print("❌ Error: \(error)")
+            self.loadError = true // 标记失败
         }
+
         self.isLoading = false
+        self.isFetchingMore = false
     }
-    
-    // MARK: - 辅助方法
-    
-    private func filterDuplicates(_ list: [Station]) -> [Station] {
-        var seenNames = Set<String>()
-        return list.filter { station in
-            let name = station.name.trimmingCharacters(in: .whitespaces)
-            return seenNames.insert(name).inserted
+
+    private func categoryToTag(_ category: RadioCategory) -> String {
+        switch category {
+        case .traffic: return "traffic"
+        case .music: return "music"
+        case .news: return "news"
+        case .sports: return "sports"
+        case .business: return "business"
+        case .culture: return "culture"
+        default: return ""
         }
     }
 
-    // 搜索逻辑保持不变，但结果可以映射给 searchResults
-    func performSearch() async {
-        searchTimer?.invalidate()
-        searchTimer = Timer.scheduledTimer(withTimeInterval: 0.6, repeats: false) { _ in
-            Task {
-                // 1. 在后台获取搜索文字
-                let query = await self.searchText.trimmingCharacters(in: .whitespaces)
-                
-                guard !query.isEmpty else {
-                    // 2. 修改 UI 属性必须切回主线程
-                    await MainActor.run {
-                        self.searchResults = []
-                    }
-                    return
-                }
-                
-                // 3. 开始搜索状态
-                await MainActor.run { self.isSearching = true }
-                
-                do {
-                    let results = try await self.service.searchStations(name: query)
-                    
-                    // 4. 成功后切回主线程更新数据
-                    await MainActor.run {
-                        self.searchResults = results
-                        
-                        // 怀集补丁
-                        if query.contains("怀集") {
-                            let huaiji = Station(
-                                changeuuid: "huaiji-fixed-uuid",
-                                name: "怀集之声",
-                                frequency: "",
-                                logoUrl: "http://lhttp.qingting.fm/live/4864/64k.mp3",
-                                streamUrl: "广东",
-                                tags: "FM102.7",
-                                state: "肇庆"
-                            )
-                            if !self.searchResults.contains(where: { $0.name == "怀集之声" }) {
-                                self.searchResults.insert(huaiji, at: 0)
-                            }
-                        }
-                        self.isSearching = false
-                    }
-                } catch {
-                    print("⚠️ 搜索错误: \(error.localizedDescription)")
-                    await MainActor.run {
-                        self.searchResults = []
-                        self.isSearching = false
-                    }
-                }
-            }
-        }
+    private func filterDuplicates(_ list: [Station]) -> [Station] {
+        var seenIDs = Set<String>()
+        // 结合 stations 已有的 ID 和新获取的进行去重
+        let existingIDs = Set(stations.map { $0.changeuuid })
+        seenIDs.formUnion(existingIDs)
+        
+        return list.filter { seenIDs.insert($0.changeuuid).inserted }
     }
 }
