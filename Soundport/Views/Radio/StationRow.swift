@@ -31,8 +31,11 @@ struct StationRow: View {
                 } placeholder: {
                     ZStack {
                         Color.gray.opacity(0.1)
-                        Image(systemName: "radio")
-                            .foregroundColor(.gray.opacity(0.3))
+//                        Image(systemName: "radio")
+//                            .foregroundColor(.gray.opacity(0.3))
+                        Image("diantai")
+                            .resizable()
+                        
                     }
                 }
                 .frame(width: 50, height: 50)

@@ -24,6 +24,8 @@ class AudioPlayerManager: ObservableObject {
     // 监听播放器状态的观察者
     private var statusObserver: NSKeyValueObservation?
     
+    private let lastStationKey = "AppLastPlayedStation"
+    
     // 获取扁平化的所有电台列表，方便计算索引
     private var flatStations: [Station] {
         allRegions.flatMap { $0.stations }
@@ -43,6 +45,10 @@ class AudioPlayerManager: ObservableObject {
         }
         
         currentStation = station
+        // 💾 保存：序列化为 JSON Data
+        if let encoded = try? JSONEncoder().encode(station) {
+            UserDefaults.standard.set(encoded, forKey: lastStationKey)
+        }
         guard let url = URL(string: station.streamUrl) else { return }
         
         configureAudioSession()
@@ -83,6 +89,17 @@ class AudioPlayerManager: ObservableObject {
         }
 
     
+    }
+    
+    // 增加一个恢复上一次退出时播放的电台方法
+    func restoreLastStation() {
+        // 📂 读取：从 Data 还原为 Station 对象
+        if let data = UserDefaults.standard.data(forKey: lastStationKey),
+           let savedStation = try? JSONDecoder().decode(Station.self, from: data) {
+            self.currentStation = savedStation
+            // 注意：这里建议只显示在播放条上，不要自动开始出声（除非用户点击播放）
+            // 因为突然出声可能会吓到用户，且不符合系统规范
+        }
     }
     
     func toggle() {

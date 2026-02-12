@@ -56,10 +56,13 @@ class FavoritesManager: ObservableObject {
             let decoder = JSONDecoder()
             let decodedStations = try decoder.decode([Station].self, from: data)
             // 在主线程更新 UI 属性
-            DispatchQueue.main.async {
-                self.favoriteStations = decodedStations
-                print("✅ 成功从磁盘恢复 \(decodedStations.count) 个电台")
-            }
+//            DispatchQueue.main.async {
+//                self.favoriteStations = decodedStations
+//                print("✅ 成功从磁盘恢复 \(decodedStations.count) 个电台")
+//            }
+            
+            self.favoriteStations = decodedStations
+            print("✅ 成功从磁盘恢复 \(decodedStations.count) 个电台")
         } catch {
             print("❌ 读取收藏失败: \(error)")
         }

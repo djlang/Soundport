@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 
 struct RadioHomeView: View {
-    private let miniPlayerHeight: CGFloat = 160
+    private let miniPlayerHeight: CGFloat = 140
     @StateObject private var viewModel = RadioViewModel.shared
     @ObservedObject private var playerManager = AudioPlayerManager.shared
     
@@ -57,6 +57,9 @@ struct RadioHomeView: View {
             .sheet(isPresented: $viewModel.showProvincePicker) {
                 ProvincePickerView(viewModel: viewModel)
             }
+            .sheet(isPresented: $viewModel.showCountryPicker) {
+                CountryPickerView(viewModel: viewModel)
+            }
         }
         .navigationViewStyle(.stack)
     }
@@ -74,7 +77,7 @@ struct RadioHomeView: View {
                             .foregroundColor(isSelected ? .blue : .gray)
                         
                         // 如果是地区分类，显示具体的省份名（如：广东）
-                        Text(category == .region ? viewModel.selectedProvince : category.rawValue)
+                        Text(category == .region ? viewModel.selectedProvince : (category == .country ? viewModel.selectedCountry : category.rawValue))
                             .font(.system(size: 12, weight: isSelected ? .bold : .regular))
                             .foregroundColor(isSelected ? .blue : .primary)
                     }
@@ -86,9 +89,15 @@ struct RadioHomeView: View {
                         if category == .region && viewModel.selectedCategory == .region {
                             // 如果已经在地区页，再次点击弹出省份选择
                             viewModel.showProvincePicker = true
-                        } else {
+                        } else if category == .country && viewModel.selectedCategory == .country {
+                            viewModel.showCountryPicker = true
+                        }
+                        
+                        else {
                             Task { await viewModel.selectCategory(category) }
                         }
+                        
+                        
                     }
                     
                     Divider().padding(.horizontal, 10).opacity(0.3)
@@ -97,7 +106,7 @@ struct RadioHomeView: View {
             .padding(.top, 10)
             
             // 避开播放器遮挡
-            Spacer(minLength: 120)
+            Spacer(minLength: miniPlayerHeight)
         }
         .frame(width: 85)
         .background(Color(UIColor.systemGray6).opacity(0.8))
@@ -115,7 +124,7 @@ struct RadioHomeView: View {
             } else {
                 List {
                     // 当前分类标题头
-                    Section(header: Text(viewModel.selectedCategory == .region ? viewModel.selectedProvince : viewModel.selectedCategory.rawValue).font(.subheadline)) {
+                    Section(header: Text(viewModel.selectedCategory == .region ? viewModel.selectedProvince : (viewModel.selectedCategory == .country ? viewModel.selectedCountry : viewModel.selectedCategory.rawValue)).font(.subheadline)) {
                         ForEach(viewModel.stations) { station in
                             StationRow(station: station)
                                 .contentShape(Rectangle())
@@ -175,7 +184,7 @@ struct RadioHomeView: View {
                     }
                     
                     // 底部占位
-                    Color.clear.frame(height: 120).listRowSeparator(.hidden)
+                    Color.clear.frame(height: miniPlayerHeight).listRowSeparator(.hidden)
                 }
                 .listStyle(.plain)
             }
@@ -237,78 +246,127 @@ struct RadioHomeView: View {
                             CachedImage(url: station.logoUrl) { image in
                                 image.resizable().scaledToFill()
                             } placeholder: {
-                                Image(systemName: "radio").foregroundColor(.blue.opacity(0.5))
+//                                Image(systemName: "radio").foregroundColor(.blue.opacity(0.5))
+                                Image("shouyinji")
+                                    .resizable()
                             }
                             .frame(width: 38, height: 38)
                             .cornerRadius(19)
                             .rotationEffect(.degrees(angle))
                             .onAppear { startRotate() }
                             .id("logo_\(station.id)")
+                            
+                            Spacer()
 
-                            VStack(alignment: .leading) {
-                                Text(station.name).font(.system(size: 15, weight: .bold)).lineLimit(1)
-                                Text(station.frequency).font(.system(size: 12)).foregroundColor(.secondary)
+                            VStack {
+                               
+                                Text(station.name)
+                                    .font(.system(size: 15, weight: .bold))
+                                    .lineLimit(1)
+                                    .transition(.asymmetric(insertion: .move(edge: .trailing).combined(with: .opacity),
+                                                           removal: .move(edge: .leading).combined(with: .opacity)))
+                                Text(station.frequency)
+                                    .font(.system(size: 13))
+                                    .foregroundColor(.secondary)
                             }
                             
                             Spacer()
                             
-                            // 收藏按钮
-                            let isFav = FavoritesManager.shared.isFavorite(station)
-                            Button(action: {
-                                withAnimation(.spring()) {
-                                    FavoritesManager.shared.toggleFavorite(station)
-                                }
-                            }) {
-                                Image(systemName: isFav ? "heart.fill" : "heart")
-                                    .foregroundColor(isFav ? .red : .gray)
+                            // “直播” 标志
+                            HStack(spacing: 4) {
+                                Circle()
+                                    .fill(Color.red)
+                                    .frame(width: 6, height: 6)
+                                Text("直播")
+                                    .font(.system(size: 12, weight: .bold))
+                                    .foregroundColor(.red)
                             }
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(Color.red.opacity(0.1))
+                            .cornerRadius(4)
+                            
                         }
                         
                         LiveProgressView().padding(.vertical, 5)
                         
-                        // 播控按钮
-                        HStack(spacing: 25) {
+                        HStack(spacing: 18) {
+                            // 🎵 音乐识别按钮
                             Button(action: {
                                 shazamManager.isRecognizing ? shazamManager.stopRecognition() : shazamManager.startRecognition()
                             }) {
                                 Image(systemName: shazamManager.isRecognizing ? "waveform.and.mic" : "shazam.logo")
-                                    .foregroundColor(shazamManager.isRecognizing ? .blue : .primary)
+                                    .font(.system(size: 20))
+                                    .foregroundColor(shazamManager.isRecognizing ? .blue : .secondary)
+                                    .symbolEffect(.bounce, options: .repeating, value: shazamManager.isRecognizing)
+                            }
+                          
+                            let isFav = FavoritesManager.shared.isFavorite(station)
+                            Button(action: {
+                                withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) { // 加个跳动动画
+                                    FavoritesManager.shared.toggleFavorite(station)
+                                    
+                                }
+                                
+                            }) {
+                                Image(systemName: isFav ? "heart.fill" : "heart")
+                                    .foregroundColor(isFav ? .red : .gray)
+                                    .scaleEffect(isFav ? 1.2 : 1.0) // 收藏后稍微放大，更有质感
                             }
                             
                             Spacer()
-                            
                             Button(action: { playerManager.previous() }) {
                                 Image(systemName: "backward.fill")
                             }
                             
-                            Button(action: { playerManager.toggle() }) {
+                            
+                            ZStack {
                                 if playerManager.isBuffering {
-                                    ProgressView().controlSize(.small)
-                                } else {
-                                    Image(systemName: playerManager.isPlaying ? "pause.fill" : "play.fill")
-                                        .font(.title2)
+                                    ProgressView()
+                                        .controlSize(.small)
+                                }else {
+                                    Button(action: { playerManager.toggle() }) {
+                                        Image(systemName: playerManager.isPlaying ? "pause.fill" : "play.fill")
+                                    }
                                 }
                             }
-                            .frame(width: 40)
+                            .frame(width: 30)
                             
                             Button(action: { playerManager.next() }) {
                                 Image(systemName: "forward.fill")
                             }
                             
+                            
                             Spacer()
                             
-                            Button(action: { showSleepTimerSheet = true }) {
-                                VStack(spacing: 2) {
-                                    Image(systemName: "moon.stars.fill")
-                                    if sleepManager.isActive {
-                                        Text(sleepManager.formattedRemainingTime).font(.system(size: 8, design: .monospaced))
+                            Button(action: { /* 列表 */ }) {
+                                Image(systemName: "list.bullet")
+                            }
+                            
+                            if playerManager.currentStation != nil {
+                                Button(action: {
+                                    // 弹出睡眠选择菜单
+                                    showSleepTimerSheet = true
+                                }) {
+                                    VStack(spacing: 4) {
+                                        Image(systemName: "moon.stars.fill")
+                                        if sleepManager.isActive {
+                                            Text(sleepManager.formattedRemainingTime)
+                                                .font(.system(size: 10, design: .monospaced))
+                                        }
                                     }
+                                    .foregroundColor(sleepManager.isActive ? .purple : .gray)
+                                    .padding(8)
+                                    .background(Color.purple.opacity(sleepManager.isActive ? 0.1 : 0))
+                                    .cornerRadius(8)
                                 }
-                                .foregroundColor(sleepManager.isActive ? .purple : .primary)
                             }
                         }
-                        .padding(.horizontal)
-                        .padding(.bottom, 30)
+                        .font(.system(size: 18))
+                        .foregroundColor(.primary)
+                        .padding(.top, 2)
+                        
+                  
                     }
                     .padding()
                     .background(.ultraThinMaterial)

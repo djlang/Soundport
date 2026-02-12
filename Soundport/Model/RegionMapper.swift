@@ -123,11 +123,54 @@ struct RegionMapper {
             "陕西": "Shensi",
             "甘肃": "Kansu",
             "青海": "Tsinghai",
-            "宁夏": "Ninghsia",
+            "宁夏": "Ningsia",
             "新疆": "Sinkiang",
         
         ]
         // 如果没在字典里，尝试直接返回中文（API 也支持部分中文搜索）
         return apiMap[chineseName] ?? chineseName
+    }
+    
+    
+    static func toApiParameterForCountry(_ CountryName: String) -> String {
+        let apiMap: [String: String] = [
+            "其他国家": "US",
+            "美国": "US",
+            "英国": "GB",
+            "韩国": "KR",
+            "泰国": "TH",
+            "阿根廷": "AR",
+            "澳大利亚": "AU",
+            "巴西": "BR",
+            "加拿大": "CA",
+            "智利": "CL",
+            "芬兰": "FI",
+            "日本": "JP",
+            "肯尼亚": "KE",
+            "马来西亚": "MY",
+            "波兰": "PL",
+            "俄罗斯": "RU",
+            "新加坡": "SG",
+            "瑞士": "CH",
+            "乌克兰": "UA",
+            "希腊": "GR",
+            "丹麦": "DK",
+            "法国": "FR",
+            "以色列": "IL",
+            "墨西哥": "MX",
+            "新西兰": "NZ",
+            "越南": "VN",
+            "委内瑞拉": "VE",
+            "乌拉圭": "UY",
+            "乌干达": "UG",
+            "土耳其": "TR",
+            "突尼斯": "TN",
+            "叙利亚": "SY",
+            "瑞典": "SE",
+            "斯里兰卡": "LK",
+            "西班牙": "ES",
+        ]
+        // 如果没在字典里，尝试直接返回中文（API 也支持部分中文搜索）
+        return apiMap[CountryName] ?? CountryName
     }
 }

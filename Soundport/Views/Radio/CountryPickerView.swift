@@ -1,24 +1,17 @@
 //
-//  ProvincePickerView.swift
+//  CountryPickerView.swift
 //  Soundport
 //
-//  Created by dengjinlang on 2026/2/10.
-//
-
-//let allProvinces = ["广东", "香港", "台湾", "澳门", "北京", "上海", "江苏", "浙江", "湖南", "湖北", "四川", "山东","天津","河北","山西","内蒙古","辽宁","吉林","黑龙江","安徽","福建","江西","河南","广西","海南","重庆","贵州","云南","西藏","陕西","甘肃","青海","宁夏","新疆"]
+//  Created by dengjinlang on 2026/2/12.
 
 import SwiftUI
 import Combine
 
-struct ProvincePickerView: View {
+struct CountryPickerView: View {
     @ObservedObject var viewModel: RadioViewModel
     @Environment(\.dismiss) var dismiss
     
-    // 热门及常用省份列表
-    let provinces = [
-        "广东", "香港", "台湾", "澳门", "北京", "上海", "江苏", "浙江", "湖南", "湖北", "四川",   "山东","天津","河北","山西","内蒙古","辽宁","吉林","黑龙江","安徽","福建","江西","河南","广西","海南","重庆","贵州","云南","西藏","陕西","甘肃","青海","宁夏","新疆"
-    ]
-    
+    let countryName = ["美国","英国","泰国","韩国","阿根廷","澳大利亚","巴西","加拿大","智利","芬兰","日本","肯尼亚", "马来西亚","波兰", "俄罗斯","新加坡","瑞士","乌克兰","希腊","丹麦", "法国","以色列", "墨西哥", "新西兰", "越南", "委内瑞拉", "乌拉圭" , "乌干达", "土耳其", "突尼斯","叙利亚","瑞典", "斯里兰卡", "西班牙"	]
     
     // 定义网格列数：一行 3 个
     let columns = [
@@ -31,26 +24,26 @@ struct ProvincePickerView: View {
         NavigationView {
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 15) {
-                    ForEach(provinces, id: \.self) { province in
+                    ForEach(countryName, id: \.self) { cy in
                         Button(action: {
                             Task {
-                                await viewModel.changeProvince(to: province)
+                                await viewModel.changeCountry(to: cy)
                                 dismiss() // 点选后自动关闭
                             }
                         }) {
-                            Text(province)
+                            Text(cy)
                                 .font(.system(size: 16, weight: .medium))
-                                .foregroundColor(viewModel.selectedProvince == province ? .white : .primary)
+                                .foregroundColor(viewModel.selectedCountry == cy ? .white : .primary)
                                 .frame(maxWidth: .infinity)
                                 .frame(height: 50)
-                                .background(viewModel.selectedProvince == province ? Color.blue : Color(.systemGray6))
+                                .background(viewModel.selectedCountry == cy ? Color.blue : Color(.systemGray6))
                                 .cornerRadius(12)
                         }
                     }
                 }
                 .padding()
             }
-            .navigationTitle("选择地区")
+            .navigationTitle("选择国家")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SearchView: View {
     @Environment(\.dismiss) var dismiss // 用于关闭页面
-    @StateObject private var viewModel = HomeViewModel.shared
+    @StateObject private var viewModel = RadioViewModel.shared
     @ObservedObject private var playerManager = AudioPlayerManager.shared
     @ObservedObject private var favManager = FavoritesManager.shared
 
@@ -48,6 +48,54 @@ struct SearchView: View {
                                 playerManager.play(station: station)
                             }
                     }
+                    
+                    
+                }
+                 
+                if !viewModel.searchResults.isEmpty  {
+                    Group {
+                        if viewModel.isFetchingMore {
+                            // 1. 正在加载中
+                            HStack {
+                                Spacer()
+                                ProgressView("正在加载更多...")
+                                Spacer()
+                            }
+                        } else if viewModel.loadError {
+                            // 2. 加载失败，点击重试
+                            Button(action: {
+                                viewModel.loadError = false
+                                Task { await viewModel.performSearchRadio(true) }
+                            }) {
+                                HStack {
+                                    Spacer()
+                                    VStack(spacing: 5) {
+                                        Image(systemName: "exclamationmark.triangle")
+                                        Text("加载失败，点击重试").font(.footnote)
+                                    }
+                                    Spacer()
+                                }
+                            }
+                            .foregroundColor(.secondary)
+                        } else if !viewModel.canLoadMore {
+                            // 3. 加载到最后了
+                            HStack {
+                                Spacer()
+                                Text("— 已显示全部电台 —")
+                                    .font(.caption2)
+                                    .foregroundColor(.gray)
+                                Spacer()
+                            }
+                        } else {
+                            Color.clear
+                                .frame(height: 50)
+                                .onAppear {
+                                    Task { await viewModel.performSearchRadio(true) }
+                                }
+                        }
+                    }
+                    .listRowSeparator(.hidden)
+                    .padding(.vertical, 10)
                 }
             }
             .navigationTitle("搜索电台")
@@ -55,7 +103,7 @@ struct SearchView: View {
             .searchable(text: $viewModel.searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "输入地名、台名或频率")
             .onChange(of: viewModel.searchText) { _ in
                 Task {
-                    await viewModel.performSearch()
+                    await viewModel.performSearchRadio(false)
                 }
             }
             .toolbar {

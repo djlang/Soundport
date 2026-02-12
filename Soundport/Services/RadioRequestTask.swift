@@ -12,7 +12,8 @@ enum RadioTask {
     case region(state: String, limit: Int, offset: Int)
     case tag(name: String, limit: Int, offset: Int)
     case national
-    case search(query: String)
+    case country(code: String, limit: Int, offset: Int)
+    case search(query: String, limit: Int, offset: Int)
 
     /// 映射 API 路径
     var path: String {
@@ -84,9 +85,20 @@ enum RadioTask {
                 URLQueryItem(name: "name", value: "CNR"),
                 URLQueryItem(name: "countrycode", value: "CN")
             ])
+        case .country(let code, let limit, let offset):
+            items.append(contentsOf: [
+                URLQueryItem(name: "limit", value: "\(limit)"),
+                URLQueryItem(name: "offset", value: "\(offset)"),
+                URLQueryItem(name: "countrycode", value: code)
+            ])
             
-        case .search(let query):
-            items.append(URLQueryItem(name: "name", value: query))
+        case .search(let query, let limit, let offset):
+            
+            items.append(contentsOf:[
+                URLQueryItem(name: "name", value: query),
+                URLQueryItem(name: "limit", value: "\(limit)"),
+                URLQueryItem(name: "offset", value: "\(offset)")
+            ])
         }
         return items
     }

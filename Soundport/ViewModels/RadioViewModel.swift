@@ -21,6 +21,8 @@ enum RadioCategory: String, CaseIterable, Identifiable {
     case sports = "体育台"
     case business = "经济"
     case culture = "文化"
+    case country = "其他国家"
+    
     
     var id: String { self.rawValue }
     
@@ -36,6 +38,7 @@ enum RadioCategory: String, CaseIterable, Identifiable {
         case .sports: return "figure.run"
         case .business: return "dollarsign"
         case .culture: return "lightbulb.fill"
+        case .country: return "globe.americas.fill"
         }
     }
 }
@@ -48,20 +51,30 @@ class RadioViewModel: ObservableObject {
     
     @Published var selectedCategory: RadioCategory = .favorites
     @Published var selectedProvince: String = "广东"
+    @Published var selectedCountry: String = "其他国家"
     @Published var stations: [Station] = []
     @Published var isLoading: Bool = false
     @Published var isFetchingMore: Bool = false
     @Published var canLoadMore: Bool = true
     @Published var showProvincePicker: Bool = false
+    @Published var showCountryPicker: Bool = false
+    
     
     @Published var loadError: Bool = false // 记录是否加载失败
+    
+    // 定义常量 Key 避免拼写错误
+    private let lastProvinceKey = "AppLastSelectedProvince"
     
     private var currentPage = 0
     private let pageSize = 10
     private let service = RadioCategorySerivce.shared
 
     private init() {
-        Task { await selectCategory(.hot) }
+        self.selectedCategory = .favorites
+        self.selectedProvince = UserDefaults.standard.string(forKey: lastProvinceKey) ?? "广东"
+        // 2. 恢复播放器状态（只显示不播放）
+        AudioPlayerManager.shared.restoreLastStation()
+        Task { await loadData()}
     }
 
     /// 切换大类
@@ -75,9 +88,18 @@ class RadioViewModel: ObservableObject {
     /// 切换省份
     func changeProvince(to province: String) async {
         self.selectedProvince = province
+        // 💾 保存：每当切换省份，立刻存入本地
+        UserDefaults.standard.set(province, forKey: lastProvinceKey)
+        
         await selectCategory(.region)
     }
-
+    
+    // 切换国家
+    func changeCountry(to country: String) async {
+        self.selectedCountry = country
+        await selectCategory(.country)
+    }
+    
     /// 核心加载方法
     func loadData(isNextPage: Bool = false) async {
         guard !isLoading && !isFetchingMore else { return }
@@ -96,17 +118,31 @@ class RadioViewModel: ObservableObject {
         do {
             let task: RadioTask
             switch selectedCategory {
+         
             case .hot:
                 task = .hot(limit: pageSize, offset: offset)
             case .region:
                 let apiParam = RegionMapper.toApiParameter(selectedProvince)
                 task = .region(state: apiParam, limit: pageSize, offset: offset)
+                
+            case .country:
+                let apiParam = RegionMapper.toApiParameterForCountry(selectedCountry)
+                task = .country(code: apiParam, limit: pageSize, offset: offset)
             case .national:
                 task = .national
             case .favorites:
-                self.stations = FavoritesManager.shared.favoriteStations
+                let favs = FavoritesManager.shared.favoriteStations
+                self.stations = favs
+                self.canLoadMore = false
+                self.loadError = false
                 self.isLoading = false
+                self.isFetchingMore = false
+                // 同步给播放器（用于切台列表）
+                AudioPlayerManager.shared.allRegions = [
+                    Region(id: "fav", name: "我的收藏", stations: favs)
+                ]
                 return
+    
             default:
                 // 对应音乐、交通、新闻等标签分类
                 let tag = categoryToTag(selectedCategory)
@@ -141,11 +177,68 @@ class RadioViewModel: ObservableObject {
         case .music: return "music"
         case .news: return "news"
         case .sports: return "sports"
-        case .business: return "business"
+        case .business: return "economics"    //business"
         case .culture: return "culture"
         default: return ""
         }
     }
+    
+    @Published var searchText: String = ""
+    @Published var searchResults: [Station] = []
+    @Published var isSearching: Bool = false
+    
+    func performSearchRadio(_ isNextPage: Bool = false) async {
+        
+        if isNextPage {
+            guard canLoadMore else { return }
+            isFetchingMore = true
+        } else {
+            isLoading = true
+            searchResults = []
+            currentPage = 0
+        }
+        
+        
+        
+        let offset = currentPage * pageSize
+        let query = self.searchText.trimmingCharacters(in: .whitespaces)
+        guard  !query.isEmpty else {
+            await MainActor.run {
+                self.searchResults = []
+            }
+            return
+        }
+        await MainActor.run { self.isSearching = true }
+        do {
+            let task: RadioTask
+            task = .search(query: query, limit: pageSize, offset: offset)
+            self.isSearching = false
+            let newStations = try await service.executeTask(task)
+            let filtered = filterDuplicates(newStations)
+            
+            
+            if isNextPage {
+                self.searchResults.append(contentsOf: filtered)
+            } else {
+                self.searchResults = filtered
+            }
+            
+            // 更新状态
+            self.canLoadMore = newStations.count >= pageSize
+            self.currentPage += 1
+        }catch {
+            print("❌ Error: \(error)")
+            self.loadError = true // 标记失败
+            self.searchResults = []
+            self.isSearching = false
+        }
+        
+        self.isLoading = false
+        self.isFetchingMore = false
+    
+    }
+    
+    
 
     private func filterDuplicates(_ list: [Station]) -> [Station] {
         var seenIDs = Set<String>()
@@ -156,3 +249,5 @@ class RadioViewModel: ObservableObject {
         return list.filter { seenIDs.insert($0.changeuuid).inserted }
     }
 }
+
+
