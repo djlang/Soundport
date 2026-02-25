@@ -24,19 +24,25 @@ struct StationRow: View {
         HStack(spacing: 12) {
             ZStack {
                 // 确保模型里的 logo 字段名正确，如果是 API 数据，通常是 favicon
+                
                 CachedImage(url: station.logoUrl) { image in
                     image
                         .resizable()
                         .scaledToFill()
                 } placeholder: {
-                    ZStack {
-                        Color.gray.opacity(0.1)
-//                        Image(systemName: "radio")
-//                            .foregroundColor(.gray.opacity(0.3))
-                        Image("diantai")
+                    if station.name == "澳門電台 FM100.7" {
+                        Image("fm1007")
                             .resizable()
                         
+                    }else {
+                        ZStack {
+                            Color.gray.opacity(0.1)
+                            Image("diantai")
+                                .resizable()
+                            
+                        }
                     }
+                    
                 }
                 .frame(width: 50, height: 50)
                 .cornerRadius(8)

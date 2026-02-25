@@ -6,11 +6,20 @@
 //
 
 import SwiftUI
+import SDWebImage
+import SDWebImageSVGCoder
 
 @main
 struct SoundportApp: App {
     
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    init() {
+        // 关键步骤：注册 SVG 解码器
+        let SVGCoder = SDImageSVGCoder.shared
+        SDImageCodersManager.shared.addCoder(SVGCoder)
+        SDWebImageDownloader.shared.setValue("image/svg+xml,image/*;q=0.8", forHTTPHeaderField: "Accept")
+            
+    }
     
     var body: some Scene {
         WindowGroup {

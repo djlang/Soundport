@@ -6,58 +6,9 @@
 //
 
 import SwiftUI
-
-class ImageCacheManager {
-    static let shared = ImageCacheManager()
-    private init() {}
-
-    // 内存缓存
-    private var memoryCache = NSCache<NSString, UIImage>()
-
-    func get(forKey key: String) -> UIImage? {
-        // 1. 先从内存找
-        if let image = memoryCache.object(forKey: key as NSString) {
-            return image
-        }
-        // 2. 再从磁盘找
-        if let image = getFromDisk(forKey: key) {
-            // 存回内存方便下次使用
-            memoryCache.setObject(image, forKey: key as NSString)
-            return image
-        }
-        return nil
-    }
-
-    func set(_ image: UIImage, forKey key: String) {
-        memoryCache.setObject(image, forKey: key as NSString)
-        saveToDisk(image, forKey: key)
-    }
-
-    private func getFilePath(forKey key: String) -> URL? {
-        let fileName = HashManager.md5(key) // 建议对URL做哈希处理作为文件名
-        return FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first?.appendingPathComponent(fileName)
-    }
-
-    private func saveToDisk(_ image: UIImage, forKey key: String) {
-        guard let data = image.pngData(), let url = getFilePath(forKey: key) else { return }
-        try? data.write(to: url)
-    }
-
-    private func getFromDisk(forKey key: String) -> UIImage? {
-        guard let url = getFilePath(forKey: key), let data = try? Data(contentsOf: url) else { return nil }
-        return UIImage(data: data)
-    }
-}
-
-// 简单的哈希工具，防止文件名包含特殊字符导致无法保存
-struct HashManager {
-    static func md5(_ string: String) -> String {
-        return String(string.hashValue) // 简化处理，实际开发建议用真正的MD5
-    }
-}
+import SDWebImageSwiftUI // 确保已安装并引入
 
 struct CachedImage<Content: View, Placeholder: View>: View {
-    @State private var uiImage: UIImage?
     let urlString: String?
     let content: (Image) -> Content
     let placeholder: () -> Placeholder
@@ -73,37 +24,28 @@ struct CachedImage<Content: View, Placeholder: View>: View {
     }
 
     var body: some View {
-        Group {
-            if let uiImage = uiImage {
-                content(Image(uiImage: uiImage))
-                    .transition(.opacity.animation(.easeIn))
-            } else {
-                placeholder()
-                    .onAppear {
-                        loadImage()
-                    }
+        // 使用 WebImage 的闭包构造器 (方案二)
+        WebImage(url: URL(string: urlString ?? "")) { image in
+            // 成功加载：调用传入的 content 闭包
+            // 注意：image 已经是 SDWebImage 处理好的 Image 对象
+            content(image)
+        } placeholder: {
+            // 加载中或失败：调用传入的 placeholder 闭包
+            placeholder()
+        }
+        .onSuccess { image, data, cacheType in
+            print("✅ SVG 加载成功: \(urlString ?? "")")
+        }
+        .onFailure { error in
+            // 关键：在控制台看具体错误
+            print("❌ 图片加载失败: \(urlString ?? ""), 错误原因: \(error.localizedDescription)")
+            if let underlyingError = (error as NSError).userInfo[NSUnderlyingErrorKey] as? NSError {
+                print("🔍 底层错误码: \(underlyingError.code), 描述: \(underlyingError.localizedDescription)")
             }
         }
-    }
-
-    private func loadImage() {
-        guard let urlString = urlString, let url = URL(string: urlString) else { return }
-        
-        // 1. 检查缓存
-        if let cached = ImageCacheManager.shared.get(forKey: urlString) {
-            self.uiImage = cached
-            return
-        }
-
-        // 2. 异步下载
-        URLSession.shared.dataTask(with: url) { data, _, _ in
-            if let data = data, let image = UIImage(data: data) {
-                // 3. 存入缓存
-                ImageCacheManager.shared.set(image, forKey: urlString)
-                DispatchQueue.main.async {
-                    self.uiImage = image
-                }
-            }
-        }.resume()
+        // 以下是全局配置
+        .retryOnAppear(true)               // 视图出现时如果失败则重试
+        .transition(.fade(duration: 0.3)) // 图片出现时的平滑淡入
+//        .indicator(.activity)             // 可选：加载时的菊花转圈
     }
 }

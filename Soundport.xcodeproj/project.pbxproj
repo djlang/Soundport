@@ -17,6 +17,8 @@
 		D201C4E12F348F5400187367 /* TVViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D201C4E02F348F5100187367 /* TVViewModel.swift */; };
 		D201C4E52F34923800187367 /* M3UParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D201C4E42F34923500187367 /* M3UParser.swift */; };
 		D201C4E72F34995E00187367 /* TVVideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D201C4E62F34995C00187367 /* TVVideoPlayer.swift */; };
+		D2A06A712F4DA59C00CA1069 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = D2A06A702F4DA59C00CA1069 /* SDWebImageSwiftUI */; };
+		D2A06A742F4DA7DA00CA1069 /* SDWebImageSVGCoder in Frameworks */ = {isa = PBXBuildFile; productRef = D2A06A732F4DA7DA00CA1069 /* SDWebImageSVGCoder */; };
 		D2CA36442F3D87C500BBD738 /* CountryPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CA36432F3D87B600BBD738 /* CountryPickerView.swift */; };
 		D2CA364D2F3DCD9E00BBD738 /* MarqueeText.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CA364C2F3DCD9D00BBD738 /* MarqueeText.swift */; };
 		D2CE72AD2F31A88C00F69A99 /* AudioPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CE72A02F31A88C00F69A99 /* AudioPlayerManager.swift */; };
@@ -127,6 +129,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D2A06A712F4DA59C00CA1069 /* SDWebImageSwiftUI in Frameworks */,
+				D2A06A742F4DA7DA00CA1069 /* SDWebImageSVGCoder in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -190,6 +194,7 @@
 				D2CE72AC2F31A88C00F69A99 /* Soundport */,
 				D22727ED2F2E4597002C3C24 /* SoundportTests */,
 				D22727F72F2E4597002C3C24 /* SoundportUITests */,
+				D2A06A6F2F4DA59C00CA1069 /* Frameworks */,
 				D22727DE2F2E4594002C3C24 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -202,6 +207,13 @@
 				D22727F42F2E4597002C3C24 /* SoundportUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		D2A06A6F2F4DA59C00CA1069 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		D2CA364B2F3DCD9700BBD738 /* Tools */ = {
@@ -302,6 +314,8 @@
 			);
 			name = Soundport;
 			packageProductDependencies = (
+				D2A06A702F4DA59C00CA1069 /* SDWebImageSwiftUI */,
+				D2A06A732F4DA7DA00CA1069 /* SDWebImageSVGCoder */,
 			);
 			productName = Soundport;
 			productReference = D22727DD2F2E4594002C3C24 /* Soundport.app */;
@@ -385,6 +399,10 @@
 			);
 			mainGroup = D22727D42F2E4594002C3C24;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				D2A06A682F4DA51400CA1069 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
+				D2A06A722F4DA7D200CA1069 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D22727DE2F2E4594002C3C24 /* Products */;
 			projectDirPath = "";
@@ -818,6 +836,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D2A06A682F4DA51400CA1069 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.1.4;
+			};
+		};
+		D2A06A722F4DA7D200CA1069 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageSVGCoder.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.8.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D2A06A702F4DA59C00CA1069 /* SDWebImageSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D2A06A682F4DA51400CA1069 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
+			productName = SDWebImageSwiftUI;
+		};
+		D2A06A732F4DA7DA00CA1069 /* SDWebImageSVGCoder */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D2A06A722F4DA7D200CA1069 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder" */;
+			productName = SDWebImageSVGCoder;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D22727D52F2E4594002C3C24 /* Project object */;
 }

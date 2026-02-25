@@ -12,6 +12,7 @@ struct RadioHomeView: View {
     private let miniPlayerHeight: CGFloat = 140
     @StateObject private var viewModel = RadioViewModel.shared
     @ObservedObject private var playerManager = AudioPlayerManager.shared
+    @StateObject private var favManager = FavoritesManager.shared
     
     @State private var showSearchSheet = false
     @State private var showSleepTimerSheet = false
@@ -298,10 +299,10 @@ struct RadioHomeView: View {
                                     .symbolEffect(.bounce, options: .repeating, value: shazamManager.isRecognizing)
                             }
                           
-                            let isFav = FavoritesManager.shared.isFavorite(station)
+                            let isFav = favManager.isFavorite(station)
                             Button(action: {
                                 withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) { // 加个跳动动画
-                                    FavoritesManager.shared.toggleFavorite(station)
+                                    favManager.toggleFavorite(station)
                                     
                                 }
                                 
