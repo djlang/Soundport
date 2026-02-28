@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import QWeatherSDK
 
 struct RadioHomeView: View {
     private let miniPlayerHeight: CGFloat = 140
@@ -21,6 +22,9 @@ struct RadioHomeView: View {
     @StateObject private var shazamManager = ShazamManager()
     @State private var angle: Double = 0
     
+    
+    @StateObject private var wvm = WeatherViewModel()
+    @StateObject var locationManager = LocationManager()
     var body: some View {
         NavigationView {
             ZStack(alignment: .bottom) {
@@ -47,8 +51,21 @@ struct RadioHomeView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Image(systemName: "leaf.fill")
-                        .foregroundColor(.green.opacity(0.8))
+
+                    VStack {
+                        HStack {
+                            Text("\(wvm.cityName ?? "")")
+                                .font(.system(size: 10))
+                            Image("\(wvm.weatherNow?.now.icon ?? "100")")
+                                .resizable()
+                                .frame(width: 12, height: 12)
+                        }
+
+                        Text("\(wvm.weatherNow?.now.temp ?? "20")°C \(wvm.weatherNow?.now.text ?? "")" )
+                            .font(.system(size: 10))
+                       
+                    }
+                    
                 }
             }
             .sheet(isPresented: $showSleepTimerSheet) {
@@ -63,6 +80,13 @@ struct RadioHomeView: View {
             }
         }
         .navigationViewStyle(.stack)
+        .onAppear {
+            locationManager.requestLocation()
+            
+            Task{
+                await wvm.fetchWeatherNow(location: locationManager.locationString ?? "113.33,23.10")
+            }
+        }
     }
     
     // MARK: - 子组件：左侧分类导航
@@ -95,7 +119,10 @@ struct RadioHomeView: View {
                         }
                         
                         else {
-                            Task { await viewModel.selectCategory(category) }
+                            Task {
+                                await viewModel.selectCategory(category)
+                            }
+                        
                         }
                         
                     }

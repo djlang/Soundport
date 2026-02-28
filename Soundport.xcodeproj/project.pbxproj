@@ -17,6 +17,10 @@
 		D201C4E12F348F5400187367 /* TVViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D201C4E02F348F5100187367 /* TVViewModel.swift */; };
 		D201C4E52F34923800187367 /* M3UParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D201C4E42F34923500187367 /* M3UParser.swift */; };
 		D201C4E72F34995E00187367 /* TVVideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D201C4E62F34995C00187367 /* TVVideoPlayer.swift */; };
+		D2102EDB2F5184B60069B492 /* WeatherTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2102EDA2F51849E0069B492 /* WeatherTask.swift */; };
+		D2102EFC2F5185DB0069B492 /* WeatherViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2102EFB2F5185D90069B492 /* WeatherViewModel.swift */; };
+		D2102EFE2F5186020069B492 /* QWeatherSDK in Frameworks */ = {isa = PBXBuildFile; productRef = D2102EFD2F5186020069B492 /* QWeatherSDK */; };
+		D2102F1F2F51EB8A0069B492 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2102F1E2F51EB880069B492 /* LocationManager.swift */; };
 		D2A06A712F4DA59C00CA1069 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = D2A06A702F4DA59C00CA1069 /* SDWebImageSwiftUI */; };
 		D2A06A742F4DA7DA00CA1069 /* SDWebImageSVGCoder in Frameworks */ = {isa = PBXBuildFile; productRef = D2A06A732F4DA7DA00CA1069 /* SDWebImageSVGCoder */; };
 		D2CA36442F3D87C500BBD738 /* CountryPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2CA36432F3D87B600BBD738 /* CountryPickerView.swift */; };
@@ -77,6 +81,9 @@
 		D201C4E02F348F5100187367 /* TVViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVViewModel.swift; sourceTree = "<group>"; };
 		D201C4E42F34923500187367 /* M3UParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = M3UParser.swift; sourceTree = "<group>"; };
 		D201C4E62F34995C00187367 /* TVVideoPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVVideoPlayer.swift; sourceTree = "<group>"; };
+		D2102EDA2F51849E0069B492 /* WeatherTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherTask.swift; sourceTree = "<group>"; };
+		D2102EFB2F5185D90069B492 /* WeatherViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherViewModel.swift; sourceTree = "<group>"; };
+		D2102F1E2F51EB880069B492 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		D22727DD2F2E4594002C3C24 /* Soundport.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Soundport.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D22727EA2F2E4597002C3C24 /* SoundportTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SoundportTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D22727F42F2E4597002C3C24 /* SoundportUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SoundportUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -130,6 +137,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D2A06A712F4DA59C00CA1069 /* SDWebImageSwiftUI in Frameworks */,
+				D2102EFE2F5186020069B492 /* QWeatherSDK in Frameworks */,
 				D2A06A742F4DA7DA00CA1069 /* SDWebImageSVGCoder in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -255,6 +263,7 @@
 		D2CE72BB2F31A8AE00F69A99 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				D2102EFB2F5185D90069B492 /* WeatherViewModel.swift */,
 				D201C4E02F348F5100187367 /* TVViewModel.swift */,
 				D2CE72A32F31A88C00F69A99 /* HomeViewModel.swift */,
 				D2DE79F62F3C7728006B8914 /* RadioViewModel.swift */,
@@ -265,6 +274,7 @@
 		D2CE72BC2F31A8C300F69A99 /* Manager */ = {
 			isa = PBXGroup;
 			children = (
+				D2102F1E2F51EB880069B492 /* LocationManager.swift */,
 				D2CE72D32F31FA6800F69A99 /* ShazamManager.swift */,
 				D2CE72CF2F31E70D00F69A99 /* CacheManager.swift */,
 				D2CE72C72F31D46C00F69A99 /* SleepTimerManager.swift */,
@@ -278,6 +288,7 @@
 		D2CE72BD2F31A8DC00F69A99 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				D2102EDA2F51849E0069B492 /* WeatherTask.swift */,
 				D2DE79FA2F3C7C4F006B8914 /* RadioRequestTask.swift */,
 				D2CE72A72F31A88C00F69A99 /* RadioService.swift */,
 				D2DE79F02F3C76A1006B8914 /* RadioCategorySerivce.swift */,
@@ -316,6 +327,7 @@
 			packageProductDependencies = (
 				D2A06A702F4DA59C00CA1069 /* SDWebImageSwiftUI */,
 				D2A06A732F4DA7DA00CA1069 /* SDWebImageSVGCoder */,
+				D2102EFD2F5186020069B492 /* QWeatherSDK */,
 			);
 			productName = Soundport;
 			productReference = D22727DD2F2E4594002C3C24 /* Soundport.app */;
@@ -402,6 +414,7 @@
 			packageReferences = (
 				D2A06A682F4DA51400CA1069 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 				D2A06A722F4DA7D200CA1069 /* XCRemoteSwiftPackageReference "SDWebImageSVGCoder" */,
+				D2102ED92F517DA10069B492 /* XCRemoteSwiftPackageReference "qweather-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D22727DE2F2E4594002C3C24 /* Products */;
@@ -446,6 +459,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D201C4E52F34923800187367 /* M3UParser.swift in Sources */,
+				D2102EFC2F5185DB0069B492 /* WeatherViewModel.swift in Sources */,
 				D2DE79F52F3C76FF006B8914 /* RadioHomeView.swift in Sources */,
 				D2CE72AD2F31A88C00F69A99 /* AudioPlayerManager.swift in Sources */,
 				D2CE72AE2F31A88C00F69A99 /* ContentView.swift in Sources */,
@@ -454,7 +468,9 @@
 				D2CE72D02F31E70F00F69A99 /* CacheManager.swift in Sources */,
 				D2DE79F92F3C7777006B8914 /* ProvincePickerView.swift in Sources */,
 				D2CE72B02F31A88C00F69A99 /* HomeViewModel.swift in Sources */,
+				D2102EDB2F5184B60069B492 /* WeatherTask.swift in Sources */,
 				D201C4D12F3468FD00187367 /* SiriStation.swift in Sources */,
+				D2102F1F2F51EB8A0069B492 /* LocationManager.swift in Sources */,
 				D2CE72CC2F31D95F00F69A99 /* CarPlaySceneDelegate.swift in Sources */,
 				D201C4DD2F348A9900187367 /* MainTabView.swift in Sources */,
 				D2CE72C02F31C22C00F69A99 /* SearchView.swift in Sources */,
@@ -639,6 +655,7 @@
 		D22727FF2F2E4597002C3C24 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Soundport/Soundport.entitlements;
@@ -660,6 +677,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = "\"$(inherited) $(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"";
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ui.Soundport;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -677,6 +695,7 @@
 		D22728002F2E4597002C3C24 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Soundport/Soundport.entitlements;
@@ -698,6 +717,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = "\"$(inherited) $(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"";
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ui.Soundport;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -838,6 +858,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		D2102ED92F517DA10069B492 /* XCRemoteSwiftPackageReference "qweather-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/qwd/qweather-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.2.2;
+			};
+		};
 		D2A06A682F4DA51400CA1069 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI.git";
@@ -857,6 +885,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		D2102EFD2F5186020069B492 /* QWeatherSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D2102ED92F517DA10069B492 /* XCRemoteSwiftPackageReference "qweather-ios-sdk" */;
+			productName = QWeatherSDK;
+		};
 		D2A06A702F4DA59C00CA1069 /* SDWebImageSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = D2A06A682F4DA51400CA1069 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;

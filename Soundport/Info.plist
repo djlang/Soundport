@@ -37,5 +37,7 @@
 		<string>audio</string>
 		<string>fetch</string>
 	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>需要用您的位置获取当前天气</string>
 </dict>
 </plist>
