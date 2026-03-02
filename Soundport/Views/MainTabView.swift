@@ -14,7 +14,7 @@ struct MainTabView: View {
         TabView(selection: $selectedTab) {
             // Tab 1: 接入你现有的电台页面
             // 假设你之前的入口是 HomeView()
-            MainHomeView()
+            RadioHomeView()
                 .tabItem {
                     Label("电台", systemImage: "radio")
                 }
