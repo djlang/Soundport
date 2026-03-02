@@ -22,7 +22,7 @@ struct StationRow: View {
     
     var body: some View {
         HStack(spacing: 12) {
-            ZStack {
+            ZStack (alignment: .bottomTrailing) {
                 // 确保模型里的 logo 字段名正确，如果是 API 数据，通常是 favicon
                 
                 CachedImage(url: station.logoUrl) { image in
@@ -49,6 +49,8 @@ struct StationRow: View {
                 
                 if isPlaying {
                     LiveVisualizer(color: .pink)
+                        .padding(4)
+
                 }
             }
             
