@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8966916D2F5582A100E53D79 /* WeatherToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8966916C2F5582A100E53D79 /* WeatherToolbarView.swift */; };
+		8966916F2F5582A100E53D79 /* RadioEmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8966916E2F5582A100E53D79 /* RadioEmptyStateView.swift */; };
+		896691712F5582A100E53D79 /* RadioPaginationFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 896691702F5582A100E53D79 /* RadioPaginationFooterView.swift */; };
 		D201C4BC2F3445D900187367 /* PlayRadioIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D201C4BB2F3445D600187367 /* PlayRadioIntent.swift */; };
 		D201C4BE2F3445FC00187367 /* SoundportShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = D201C4BD2F3445F900187367 /* SoundportShortcuts.swift */; };
 		D201C4C02F34464800187367 /* PlayFavoritesIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D201C4BF2F34464600187367 /* PlayFavoritesIntent.swift */; };
@@ -71,6 +74,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8966916C2F5582A100E53D79 /* WeatherToolbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherToolbarView.swift; sourceTree = "<group>"; };
+		8966916E2F5582A100E53D79 /* RadioEmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioEmptyStateView.swift; sourceTree = "<group>"; };
+		896691702F5582A100E53D79 /* RadioPaginationFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioPaginationFooterView.swift; sourceTree = "<group>"; };
 		D201C4BB2F3445D600187367 /* PlayRadioIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayRadioIntent.swift; sourceTree = "<group>"; };
 		D201C4BD2F3445F900187367 /* SoundportShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundportShortcuts.swift; sourceTree = "<group>"; };
 		D201C4BF2F34464600187367 /* PlayFavoritesIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayFavoritesIntent.swift; sourceTree = "<group>"; };
@@ -182,6 +188,9 @@
 				D2CE72D12F31F15D00F69A99 /* LiveProgressView.swift */,
 				D2CE72A62F31A88C00F69A99 /* MainHomeView.swift */,
 				D2DE79F42F3C76FF006B8914 /* RadioHomeView.swift */,
+				8966916C2F5582A100E53D79 /* WeatherToolbarView.swift */,
+				8966916E2F5582A100E53D79 /* RadioEmptyStateView.swift */,
+				896691702F5582A100E53D79 /* RadioPaginationFooterView.swift */,
 			);
 			path = Radio;
 			sourceTree = "<group>";
@@ -478,13 +487,16 @@
 				D2CE72B12F31A88C00F69A99 /* ImageCacheManager.swift in Sources */,
 				D2CE72C82F31D46E00F69A99 /* SleepTimerManager.swift in Sources */,
 				D2CE72D22F31F16600F69A99 /* LiveProgressView.swift in Sources */,
+				8966916F2F5582A100E53D79 /* RadioEmptyStateView.swift in Sources */,
 				D201C4C02F34464800187367 /* PlayFavoritesIntent.swift in Sources */,
 				D201C4E72F34995E00187367 /* TVVideoPlayer.swift in Sources */,
 				D2CE72D42F31FA6A00F69A99 /* ShazamManager.swift in Sources */,
 				D2CE72B22F31A88C00F69A99 /* MainHomeView.swift in Sources */,
+				896691712F5582A100E53D79 /* RadioPaginationFooterView.swift in Sources */,
 				D2DE79FB2F3C7C54006B8914 /* RadioRequestTask.swift in Sources */,
 				D2CE72B32F31A88C00F69A99 /* RadioService.swift in Sources */,
 				D201C4DF2F348DE100187367 /* TVHomeView.swift in Sources */,
+				8966916D2F5582A100E53D79 /* WeatherToolbarView.swift in Sources */,
 				D2DE79F72F3C7728006B8914 /* RadioViewModel.swift in Sources */,
 				D2DE79F12F3C76A1006B8914 /* RadioCategorySerivce.swift in Sources */,
 				D2CE72CA2F31D54200F69A99 /* SleepTimerSheet.swift in Sources */,

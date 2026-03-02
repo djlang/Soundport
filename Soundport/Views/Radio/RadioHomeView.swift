@@ -7,7 +7,6 @@
 
 import SwiftUI
 import Combine
-import QWeatherSDK
 
 struct RadioHomeView: View {
     private let miniPlayerHeight: CGFloat = 140
@@ -51,21 +50,7 @@ struct RadioHomeView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-
-                    VStack {
-                        HStack {
-                            Text("\(wvm.cityName ?? "")")
-                                .font(.system(size: 10))
-                            Image("\(wvm.weatherNow?.now.icon ?? "100")")
-                                .resizable()
-                                .frame(width: 12, height: 12)
-                        }
-
-                        Text("\(wvm.weatherNow?.now.temp ?? "20")°C \(wvm.weatherNow?.now.text ?? "")" )
-                            .font(.system(size: 10))
-                       
-                    }
-                    
+                    WeatherToolbarView(weatherViewModel: wvm)
                 }
             }
             .sheet(isPresented: $showSleepTimerSheet) {
@@ -147,7 +132,7 @@ struct RadioHomeView: View {
             searchBarHeader
             
             if viewModel.stations.isEmpty && !viewModel.isLoading {
-                emptyStateView
+                RadioEmptyStateView(selectedCategory: viewModel.selectedCategory)
             } else {
                 List {
                     // 当前分类标题头
@@ -164,48 +149,18 @@ struct RadioHomeView: View {
                     // 2. 翻页加载触发器 (关键位置)
                     // --- 翻页/底部状态区 ---
                     if !viewModel.stations.isEmpty && viewModel.selectedCategory != .favorites {
-                        Group {
-                            if viewModel.isFetchingMore {
-                                // 1. 正在加载中
-                                HStack {
-                                    Spacer()
-                                    ProgressView("正在加载更多...")
-                                    Spacer()
-                                }
-                            } else if viewModel.loadError {
-                                // 2. 加载失败，点击重试
-                                Button(action: {
-                                    viewModel.loadError = false
-                                    Task { await viewModel.loadData(isNextPage: true) }
-                                }) {
-                                    HStack {
-                                        Spacer()
-                                        VStack(spacing: 5) {
-                                            Image(systemName: "exclamationmark.triangle")
-                                            Text("加载失败，点击重试").font(.footnote)
-                                        }
-                                        Spacer()
-                                    }
-                                }
-                                .foregroundColor(.secondary)
-                            } else if !viewModel.canLoadMore {
-                                // 3. 加载到最后了
-                                HStack {
-                                    Spacer()
-                                    Text("— 已显示全部电台 —")
-                                        .font(.caption2)
-                                        .foregroundColor(.gray)
-                                    Spacer()
-                                }
-                            } else {
-                                // 4. 准备加载触发器：这是一个看不见的透明层，滑动到它时触发
-                                Color.clear
-                                    .frame(height: 50)
-                                    .onAppear {
-                                        Task { await viewModel.loadData(isNextPage: true) }
-                                    }
+                        RadioPaginationFooterView(
+                            isFetchingMore: viewModel.isFetchingMore,
+                            loadError: viewModel.loadError,
+                            canLoadMore: viewModel.canLoadMore,
+                            onRetry: {
+                                viewModel.loadError = false
+                                Task { await viewModel.loadData(isNextPage: true) }
+                            },
+                            onLoadMore: {
+                                Task { await viewModel.loadData(isNextPage: true) }
                             }
-                        }
+                        )
                         .listRowSeparator(.hidden)
                         .padding(.vertical, 10)
                     }
@@ -235,21 +190,6 @@ struct RadioHomeView: View {
         }
     }
     
-    private var emptyStateView: some View {
-        VStack(spacing: 15) {
-            Spacer()
-            Image(systemName: viewModel.selectedCategory == .favorites ? "heart.slash" : "antenna.radiowaves.left.and.right.slash")
-                .font(.system(size: 40))
-                .foregroundColor(.gray.opacity(0.5))
-            Text(viewModel.selectedCategory == .favorites ? "暂无收藏电台" : "该分类暂无数据")
-                .foregroundColor(.secondary)
-            if viewModel.selectedCategory == .favorites {
-                Text("点击电台后的红心即可收藏").font(.caption2).foregroundColor(.gray)
-            }
-            Spacer()
-        }
-    }
-
     // MARK: - 其他原有组件逻辑（保持不变或微调）
     
     private var loadingOverlay: some View {

@@ -6,7 +6,6 @@
 //
 import SwiftUI
 
-
 struct StationRow: View {
     @ObservedObject private var playerManager = AudioPlayerManager.shared
     // 1. 引入收藏单例
