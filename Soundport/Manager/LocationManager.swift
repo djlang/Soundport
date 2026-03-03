@@ -64,6 +64,10 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         }
     }
 
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("定位失败: \(error.localizedDescription)")
+    }
+
     private func startMonitoringSignificantChangesIfNeeded() {
         guard !isMonitoringSignificantChanges else { return }
         guard CLLocationManager.significantLocationChangeMonitoringAvailable() else { return }
