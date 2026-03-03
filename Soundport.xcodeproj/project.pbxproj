@@ -694,6 +694,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Soundport/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "声泊";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "需要用您的位置获取当前天气";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "我们需要访问麦克风以识别电台中正在播放的歌曲信息";
 				INFOPLIST_KEY_NSSiriUsageDescription = "允许 Siri 语音控制播放电台。";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -734,6 +736,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Soundport/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "声泊";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "需要用您的位置获取当前天气";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "我们需要访问麦克风以识别电台中正在播放的歌曲信息";
 				INFOPLIST_KEY_NSSiriUsageDescription = "允许 Siri 语音控制播放电台。";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

@@ -10,6 +10,7 @@ import Combine
 
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private let manager = CLLocationManager()
+    private var isMonitoringSignificantChanges = false
     
     // 发布位置数据，供 SwiftUI 视图监听
 //    @Published var location: CLLocation?
@@ -25,7 +26,10 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     func requestLocation() {
         // 检查权限并请求位置
         manager.requestWhenInUseAuthorization()
-        manager.startUpdatingLocation()
+        // 先请求一次当前位置
+        manager.requestLocation()
+        // 低功耗监听显著位置变化，避免持续高频定位
+        startMonitoringSignificantChangesIfNeeded()
     }
 
     // 代理方法：当位置更新时调用
@@ -38,11 +42,14 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         
         // 2. 格式化为和风天气要求的字符串 "经度,纬度"
         // 注意：和风建议保留两位小数，或者直接传
-        locationString = String(format: "%.2f,%.2f", longitude, latitude)
+        let newLocationString = String(format: "%.2f,%.2f", longitude, latitude)
+        DispatchQueue.main.async {
+            self.locationString = newLocationString
+        }
         
-        print("准备请求天气的坐标: \(locationString ?? "113.33,23.10")")
+        print("准备请求天气的坐标: \(newLocationString)")
         
-        // 3. 停止定位以省电（如果你只需要获取一次当前位置）
+        // 3. 停止普通定位以省电（显著变化监听继续生效）
         manager.stopUpdatingLocation()
         
         // 4. 调用你的请求函数
@@ -51,5 +58,16 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
 
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         self.authorizationStatus = status
+        // 授权后启动显著位置变化监听
+        if status == .authorizedAlways || status == .authorizedWhenInUse {
+            startMonitoringSignificantChangesIfNeeded()
+        }
+    }
+
+    private func startMonitoringSignificantChangesIfNeeded() {
+        guard !isMonitoringSignificantChanges else { return }
+        guard CLLocationManager.significantLocationChangeMonitoringAvailable() else { return }
+        manager.startMonitoringSignificantLocationChanges()
+        isMonitoringSignificantChanges = true
     }
 }
