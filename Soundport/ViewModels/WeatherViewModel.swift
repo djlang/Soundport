@@ -16,31 +16,46 @@ class WeatherViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var errorMessage: String?
     @Published var cityName: String?
+    
+    private var isConfigured = false
+    private var isConfiguring = false
 
     init() {
-        configWeather()
+        Task {
+            await ensureConfigured()
+        }
     }
 
-    private func configWeather() {
-        Task {
-            do {
-                let jwt = JWTGenerator(
-                    privateKey: "MC4CAQAwBQYDK2VwBCIEIIsQLmaBc47gChaPflzaty8ooXLQxPLJ8mTr2ZFPBAyW",
-                    pid: "4KTHBBBK24",
-                    kid: "TNPKEQQEUW"
-                )
-                
-                try await QWeather.getInstance("pu3qqrdrmr.re.qweatherapi.com")
-                    .setupTokenGenerator(jwt)
-                    .setupLogEnable(true)
-            } catch {
-                self.errorMessage = "SDK 初始化失败: \(error.localizedDescription)"
-            }
+    private func ensureConfigured() async {
+        if isConfigured || isConfiguring {
+            return
+        }
+        
+        isConfiguring = true
+        defer { isConfiguring = false }
+        
+        do {
+            let jwt = JWTGenerator(
+                privateKey: "MC4CAQAwBQYDK2VwBCIEIIsQLmaBc47gChaPflzaty8ooXLQxPLJ8mTr2ZFPBAyW",
+                pid: "4KTHBBBK24",
+                kid: "TNPKEQQEUW"
+            )
+            
+            try await QWeather.getInstance("pu3qqrdrmr.re.qweatherapi.com")
+                .setupTokenGenerator(jwt)
+                .setupLogEnable(true)
+            
+            self.isConfigured = true
+        } catch {
+            self.errorMessage = "SDK 初始化失败: \(error.localizedDescription)"
         }
     }
 
     // 业务逻辑方法：获取实时天气
     func fetchWeatherNow(location: String = "101280101") async {
+        await ensureConfigured()
+        guard isConfigured else { return }
+        
         isLoading = true
         errorMessage = nil
 

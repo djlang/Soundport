@@ -94,7 +94,12 @@ class AudioPlayerManager: ObservableObject {
     }
     
     func toggle() {
-        guard let player = player else { return }
+        guard let player = player else {
+            if let current = currentStation {
+                play(station: current)
+            }
+            return
+        }
         if isPlaying {
             player.pause()
         } else {

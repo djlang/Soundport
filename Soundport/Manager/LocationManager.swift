@@ -60,6 +60,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         self.authorizationStatus = status
         // 授权后启动显著位置变化监听
         if status == .authorizedAlways || status == .authorizedWhenInUse {
+            manager.requestLocation()
             startMonitoringSignificantChangesIfNeeded()
         }
     }

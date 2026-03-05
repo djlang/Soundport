@@ -49,8 +49,9 @@ class SleepTimerManager: ObservableObject {
     private func timeReachedZero() {
         stopTimer()
         // 关键：停止播放
-        playerManager.toggle()
+        playerManager.stop()
         print("🌙 睡眠时间到，已自动停止播放")
+        
     }
     
     // 格式化剩余时间显示 (如 12:05)
