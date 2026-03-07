@@ -25,7 +25,6 @@
 		D201C4E12F348F5400187367 /* TVViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D201C4E02F348F5100187367 /* TVViewModel.swift */; };
 		D201C4E52F34923800187367 /* M3UParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D201C4E42F34923500187367 /* M3UParser.swift */; };
 		D201C4E72F34995E00187367 /* TVVideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D201C4E62F34995C00187367 /* TVVideoPlayer.swift */; };
-		D2102EDB2F5184B60069B492 /* WeatherTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2102EDA2F51849E0069B492 /* WeatherTask.swift */; };
 		D2102EFC2F5185DB0069B492 /* WeatherViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2102EFB2F5185D90069B492 /* WeatherViewModel.swift */; };
 		D2102EFE2F5186020069B492 /* QWeatherSDK in Frameworks */ = {isa = PBXBuildFile; productRef = D2102EFD2F5186020069B492 /* QWeatherSDK */; };
 		D2102F1F2F51EB8A0069B492 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2102F1E2F51EB880069B492 /* LocationManager.swift */; };
@@ -96,7 +95,6 @@
 		D201C4E02F348F5100187367 /* TVViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVViewModel.swift; sourceTree = "<group>"; };
 		D201C4E42F34923500187367 /* M3UParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = M3UParser.swift; sourceTree = "<group>"; };
 		D201C4E62F34995C00187367 /* TVVideoPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVVideoPlayer.swift; sourceTree = "<group>"; };
-		D2102EDA2F51849E0069B492 /* WeatherTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherTask.swift; sourceTree = "<group>"; };
 		D2102EFB2F5185D90069B492 /* WeatherViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherViewModel.swift; sourceTree = "<group>"; };
 		D2102F1E2F51EB880069B492 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		D22727DD2F2E4594002C3C24 /* Soundport.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Soundport.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -309,7 +307,6 @@
 		D2CE72BD2F31A8DC00F69A99 /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				D2102EDA2F51849E0069B492 /* WeatherTask.swift */,
 				D2DE79FA2F3C7C4F006B8914 /* RadioRequestTask.swift */,
 				D2CE72A72F31A88C00F69A99 /* RadioService.swift */,
 				D2DE79F02F3C76A1006B8914 /* RadioCategorySerivce.swift */,
@@ -490,7 +487,6 @@
 				D2CE72D02F31E70F00F69A99 /* CacheManager.swift in Sources */,
 				D2DE79F92F3C7777006B8914 /* ProvincePickerView.swift in Sources */,
 				D2CE72B02F31A88C00F69A99 /* HomeViewModel.swift in Sources */,
-				D2102EDB2F5184B60069B492 /* WeatherTask.swift in Sources */,
 				D201C4D12F3468FD00187367 /* SiriStation.swift in Sources */,
 				D2102F1F2F51EB8A0069B492 /* LocationManager.swift in Sources */,
 				D2CE72CC2F31D95F00F69A99 /* CarPlaySceneDelegate.swift in Sources */,
@@ -694,6 +690,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Soundport/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "声泊";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "需要用您的位置获取当前天气";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "我们需要访问麦克风以识别电台中正在播放的歌曲信息";
 				INFOPLIST_KEY_NSSiriUsageDescription = "允许 Siri 语音控制播放电台。";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -734,6 +732,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Soundport/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "声泊";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "需要用您的位置获取当前天气";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "我们需要访问麦克风以识别电台中正在播放的歌曲信息";
 				INFOPLIST_KEY_NSSiriUsageDescription = "允许 Siri 语音控制播放电台。";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

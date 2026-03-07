@@ -20,6 +20,7 @@ class FavoritesManager: ObservableObject {
     }
     
     private let filename = "user_favorites_v2.json" // 换个名，防止旧数据干扰
+    private let ioQueue = DispatchQueue(label: "Soundport.FavoritesManager.IO", qos: .utility)
     
     private var saveURL: URL {
         FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
@@ -33,12 +34,15 @@ class FavoritesManager: ObservableObject {
 
     // --- 存盘：把数组转成 JSON 写进手机文件 ---
     private func saveToDisk() {
-        DispatchQueue.global(qos: .background).async {
+        let snapshot = favoriteStations
+        let url = saveURL
+        
+        ioQueue.async {
             do {
                 let encoder = JSONEncoder()
-                let data = try encoder.encode(self.favoriteStations)
-                try data.write(to: self.saveURL, options: .atomic)
-                print("💾 收藏已持久化，总数: \(self.favoriteStations.count)")
+                let data = try encoder.encode(snapshot)
+                try data.write(to: url, options: .atomic)
+                print("💾 收藏已持久化，总数: \(snapshot.count)")
             } catch {
                 print("❌ 存盘失败: \(error)")
             }
