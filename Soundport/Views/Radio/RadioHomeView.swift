@@ -18,6 +18,7 @@ struct RadioHomeView: View {
     @StateObject private var wvm = WeatherViewModel()
     @StateObject var locationManager = LocationManager()
     @State private var lastWeatherLocation: String?
+    @State private var weatherRefreshTrigger = 0
     var body: some View {
         NavigationView {
             ZStack(alignment: .bottom) {
@@ -69,7 +70,12 @@ struct RadioHomeView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    WeatherToolbarView(weatherViewModel: wvm)
+                    WeatherToolbarView(weatherViewModel: wvm) {
+                        // 手动刷新：重新定位，并强制允许同坐标再次请求
+                        lastWeatherLocation = nil
+                        weatherRefreshTrigger += 1
+                        locationManager.requestLocation()
+                    }
                 }
             }
             .sheet(isPresented: $showSleepTimerSheet) {
@@ -87,7 +93,7 @@ struct RadioHomeView: View {
         .onAppear {
             locationManager.requestLocation()
         }
-        .task(id: locationManager.locationString) {
+        .task(id: "\(locationManager.locationString ?? "")-\(weatherRefreshTrigger)") {
             guard let location = locationManager.locationString else { return }
             guard lastWeatherLocation != location else { return }
             lastWeatherLocation = location
