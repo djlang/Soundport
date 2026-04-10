@@ -65,7 +65,8 @@ class WeatherViewModel: ObservableObject {
             print(response)
             self.weatherNow = response
         } catch QWeatherError.errorResponse(let error) {
-            self.errorMessage = "API 错误: \(error)"
+            // 修复：将 ErrorDetail 转换为字符串
+            self.errorMessage = "API 错误: \(String(describing: error))"
         } catch {
             self.errorMessage = "未知错误: \(error.localizedDescription)"
         }
@@ -77,8 +78,7 @@ class WeatherViewModel: ObservableObject {
         }
     }
     
-    // 你可以继续在此添加 testGeoCityLookup, testAirNow 等其他方法
-    //通过经纬度查询所在的位置
+    // 通过经纬度查询所在的位置
     func locationToCity(location: String = "101280101") async {
         do {
             let response =  try await QWeather.instance
@@ -86,17 +86,14 @@ class WeatherViewModel: ObservableObject {
             print(response)
             self.cityName = response.location.last?.name
         } catch QWeatherError.errorResponse(let error) {
-            print(error)
+            // 修复：将 ErrorDetail 转换为字符串
+            print(String(describing: error))
         } catch {
             print(error)
         }
     }
     
-    
-    
-    
-    //获取城市id
-
+    // 获取城市id
     func fetchCityCode() {
         Task{
             do {
@@ -104,7 +101,8 @@ class WeatherViewModel: ObservableObject {
                     .geoCityLookup(.init(location: "广州"))
                 print(response)
             } catch QWeatherError.errorResponse(let error) {
-                print(error)
+                // 修复：将 ErrorDetail 转换为字符串
+                print(String(describing: error))
             } catch {
                 print(error)
             }
@@ -112,22 +110,3 @@ class WeatherViewModel: ObservableObject {
     }
 }
 
-
-/**
- location    [QWeatherSDK.Location]    1 value
- [0]    QWeatherSDK.Location    0x00000001354b0fc0
- ObjectiveC.NSObject    NSObject
- name    String    "海珠"
- cid    String    "101280108"
- lat    String    "23.08400"
- lon    String    "113.31741"
- adm2    String    "广州"
- adm1    String    "广东省"
- country    String    "中国"
- tz    String    "Asia/Shanghai"
- utcOffset    String    "+08:00"
- isDst    String    "0"
- type    String    "city"
- rank    String    "25"
- fxLink    String    "https://www.qweather.com/weather/haizhu-101280108.html"
- */
