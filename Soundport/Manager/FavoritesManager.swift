@@ -83,4 +83,43 @@ class FavoritesManager: ObservableObject {
     func isFavorite(_ station: Station) -> Bool {
         return favoriteStations.contains { $0.changeuuid == station.changeuuid }
     }
+    
+    // MARK: - 重排序方法
+    
+    /// 移动电台到新位置（用于拖拽排序）
+    func moveStation(from source: IndexSet, to destination: Int) {
+        guard let sourceIndex = source.first else { return }
+        
+        // 手动实现数组元素移动
+        let station = favoriteStations[sourceIndex]
+        favoriteStations.remove(at: sourceIndex)
+        
+        // 计算正确的插入位置（因为删除后索引可能变化）
+        let insertIndex = destination > sourceIndex ? destination - 1 : destination
+        favoriteStations.insert(station, at: insertIndex)
+        
+        // @Published + didSet 会自动触发存盘
+    }
+    
+    /// 交换两个电台的位置
+    func swapStations(at index1: Int, and index2: Int) {
+        guard index1 != index2,
+              index1 >= 0, index2 >= 0,
+              index1 < favoriteStations.count,
+              index2 < favoriteStations.count else { return }
+        favoriteStations.swapAt(index1, index2)
+        // @Published + didSet 会自动触发存盘
+    }
+    
+    /// 上移电台
+    func moveUp(at index: Int) {
+        guard index > 0 else { return }
+        favoriteStations.swapAt(index, index - 1)
+    }
+    
+    /// 下移电台
+    func moveDown(at index: Int) {
+        guard index < favoriteStations.count - 1 else { return }
+        favoriteStations.swapAt(index, index + 1)
+    }
 }

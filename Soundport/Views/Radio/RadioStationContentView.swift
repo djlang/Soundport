@@ -29,6 +29,12 @@ struct RadioStationContentView: View {
                                     onStationTap(station)
                                 }
                         }
+                        // ✅ 仅在收藏分类启用拖拽排序
+                        .onMove(perform: { source, destination in
+                            if viewModel.selectedCategory == .favorites {
+                                FavoritesManager.shared.moveStation(from: source, to: destination)
+                            }
+                        })
                     }
 
                     if !viewModel.stations.isEmpty && viewModel.selectedCategory != .favorites {
