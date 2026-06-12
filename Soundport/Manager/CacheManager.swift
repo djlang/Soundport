@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+import SDWebImage
 
 struct CacheManager {
     static let filename = "radio_data_v1.json"
@@ -14,6 +14,34 @@ struct CacheManager {
     private static var cacheURL: URL {
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         return paths[0].appendingPathComponent(filename)
+    }
+    
+    // 获取缓存大小 (MB)
+    static func calculateCacheSize() -> String {
+        var totalSize: UInt64 = 0
+        
+        // 1. JSON 缓存大小
+        if let attributes = try? FileManager.default.attributesOfItem(atPath: cacheURL.path),
+           let fileSize = attributes[.size] as? UInt64 {
+            totalSize += fileSize
+        }
+        
+        // 2. SDImageCache 大小
+        totalSize += UInt64(SDImageCache.shared.totalDiskSize())
+        
+        let sizeMB = Double(totalSize) / 1024 / 1024
+        return String(format: "%.1f", sizeMB)
+    }
+    
+    // 清除所有缓存
+    static func clearAllCache(completion: @escaping () -> Void) {
+        // 1. 清除 JSON 缓存
+        try? FileManager.default.removeItem(at: cacheURL)
+        
+        // 2. 清除 SDImageCache
+        SDImageCache.shared.clearDisk {
+            completion()
+        }
     }
     
     // 异步保存：不阻塞主线程，真机更流畅

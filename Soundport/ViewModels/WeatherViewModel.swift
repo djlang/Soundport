@@ -16,6 +16,7 @@ class WeatherViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var errorMessage: String?
     @Published var cityName: String?
+    @Published var cacheSize: String = "0.0"
     
     private var isConfigured = false
     private var isConfiguring = false
@@ -23,6 +24,21 @@ class WeatherViewModel: ObservableObject {
     init() {
         Task {
             await ensureConfigured()
+            updateCacheSize()
+        }
+    }
+    
+    // 更新缓存大小
+    func updateCacheSize() {
+        self.cacheSize = CacheManager.calculateCacheSize()
+    }
+    
+    // 清除缓存
+    func clearCache() {
+        CacheManager.clearAllCache {
+            DispatchQueue.main.async {
+                self.updateCacheSize()
+            }
         }
     }
 
