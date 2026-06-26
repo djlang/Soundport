@@ -48,6 +48,9 @@ struct WeatherToolbarView: View {
         .contextMenu {
             contextMenuItems
         }
+        .onAppear {
+            weatherViewModel.updateCacheSize()
+        }
     }
     
     // MARK: - 子视图
@@ -77,6 +80,12 @@ struct WeatherToolbarView: View {
                 Button("详情", systemImage: "info.circle") {
                     openWeatherDetails()
                 }
+            }
+            
+            Divider()
+            
+            Button("清除缓存 (\(weatherViewModel.cacheSize)MB)", systemImage: "trash") {
+                weatherViewModel.clearCache()
             }
         }
     }

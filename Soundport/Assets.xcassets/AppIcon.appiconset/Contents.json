@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "soundport.png",
+      "filename" : "soundPort.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
@@ -13,7 +13,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "soundport 1.png",
+      "filename" : "soundPort 2.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
@@ -25,7 +25,7 @@
           "value" : "tinted"
         }
       ],
-      "filename" : "soundport 2.png",
+      "filename" : "soundPort 1.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
